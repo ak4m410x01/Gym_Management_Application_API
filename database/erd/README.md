@@ -209,7 +209,6 @@ TABLE vacations {
   reason VARCHAR(10000) [NULL]
   start_at TIMESTAMP [NOT NULL]
   end_at TIMESTAMP [NOT NULL]
-  is_accepted BOOLEAN [NOT NULL]
   created_at TIMESTAMP [DEFAULT: `now()`]
 
   coach_id INTEGER [ref: > coaches.id]
