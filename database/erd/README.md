@@ -2,7 +2,7 @@
 
 ##### **Use [dbdiagram](https://dbdiagram.io/d/) to render `models.txt`**
 
-## Accounts
+### Accounts
 
 ```sql
 // -------------------------- \\
@@ -30,7 +30,7 @@ TABLE accounts {
 }
 ```
 
-## Admins
+### Admins
 
 ```sql
 // Admins
@@ -40,7 +40,7 @@ TABLE admins {
 }
 ```
 
-## Coaches
+### Coaches
 
 ```sql
 // Coaches
@@ -50,7 +50,7 @@ TABLE coaches {
 }
 ```
 
-## Members
+### Members
 
 ```sql
 // Members
@@ -60,7 +60,7 @@ TABLE members {
 }
 ```
 
-## Visitros
+### Visitros
 
 ```sql
 // Visitors
@@ -70,7 +70,7 @@ TABLE visitors {
 }
 ```
 
-## Contacts Info
+### Contacts Info
 
 ```sql
 // Contacts
@@ -85,7 +85,7 @@ TABLE contacts {
 }
 ```
 
-## Salaries
+### Salaries
 
 ```sql
 // Salaries
@@ -99,7 +99,7 @@ TABLE coaches_salaries {
 
 ---
 
-## Plans
+### Plans
 
 ```sql
 // ----------------------- \\
@@ -119,7 +119,7 @@ TABLE plans {
 }
 ```
 
-## Subscriptions
+### Subscriptions
 
 ```sql
 // Subscriptions
@@ -134,7 +134,7 @@ TABLE subscriptions {
 }
 ```
 
-## Exercises
+### Exercises
 
 ```sql
 // Exercises
@@ -151,7 +151,7 @@ TABLE exercises {
 }
 ```
 
-## Meals
+### Meals
 
 ```sql
 // Meals
@@ -171,7 +171,7 @@ TABLE meals {
 
 ---
 
-## Complaints
+### Complaints
 
 ```sql
 // ---------------------------- \\
@@ -199,7 +199,7 @@ TABLE complaints {
 
 ---
 
-## Vacations
+### Vacations
 
 ```sql
 // --------------------------- \\
@@ -229,7 +229,7 @@ TABLE vacations {
 
 ---
 
-## Jobs
+### Jobs
 
 ```sql
 // ---------------------- \\
@@ -249,7 +249,7 @@ TABLE jobs {
 }
 ```
 
-## Job applicants
+### Job applicants
 
 ```sql
 // Jobs Applicants
@@ -269,7 +269,7 @@ TABLE job_applicants {
 
 ---
 
-## Contact Us
+### Contact Us
 
 ```sql
 // -------------------------- \\
@@ -292,7 +292,7 @@ TABLE contact_us {
 }
 ```
 
-## About us
+### About us
 
 ```sql
 // About us
@@ -304,3 +304,11 @@ TABLE about_us {
   our_goals VARCHAR(20000) [NULL]
 }
 ```
+
+---
+
+## Database ER Diagram
+
+<div align="center">
+  <img src="./erd.png">
+</div>
