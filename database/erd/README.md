@@ -5,30 +5,35 @@
 ## Accounts
 
 ```sql
+// -------------------------- \\
+// =======> Accounts <======= \\
+// -------------------------- \\
+
+// Accounts
 TABLE accounts {
   id INTEGER [PK, NOT NULL]
   first_name VARCHAR(30) [NOT NULL]
   last_name VARCHAR(30) [NOT NULL]
   gender ENUM('M', 'F') [NOT NULL]
-  date_of_birth TIMESTAMP [NOT NULL]
+  date_of_birth DATE [NOT NULL]
   email EMAIL [UNIQUE, NOT NULL]
   username VARCHAR(100) [UNIQUE, NOT NULL]
   password VARCHAR(100) [NOT NULL]
   country VARCHAR(30) [NULL]
   city VARCHAR(30) [NULL]
   address VARCHAR(50) [NULL]
-  image IMAGE [NULL]
   joined_at TIMESTAMP [DEFAULT: `now()`]
   first_login TIMESTAMP [NULL]
   last_login TIMESTAMP [NULL]
 
-  contact_info_id INTEGER [UNIQUE, ref: > contacts_info.id]
+  contact_info_id INTEGER [UNIQUE, ref: > contacts.id]
 }
 ```
 
 ## Admins
 
 ```sql
+// Admins
 TABLE admins {
   id INTEGER [PK, NOT NULL]
   account_id INTEGER [UNIQUE, ref: > accounts.id]
@@ -38,9 +43,8 @@ TABLE admins {
 ## Coaches
 
 ```sql
+// Coaches
 TABLE coaches {
-  salary INTEGER [NOT NULL]
-
   id INTEGER [PK, NOT NULL]
   account_id INTEGER [UNIQUE, ref: > accounts.id]
 }
@@ -49,6 +53,7 @@ TABLE coaches {
 ## Members
 
 ```sql
+// Members
 TABLE members {
   id INTEGER [PK, NOT NULL]
   account_id INTEGER [UNIQUE, ref: > accounts.id]
@@ -58,6 +63,7 @@ TABLE members {
 ## Visitros
 
 ```sql
+// Visitors
 TABLE visitors {
   id INTEGER [PK, NOT NULL]
   account_id INTEGER [UNIQUE, ref: > accounts.id]
@@ -67,7 +73,8 @@ TABLE visitors {
 ## Contacts Info
 
 ```sql
-TABLE contacts_info {
+// Contacts
+TABLE contacts {
   id INTEGER [PK, NOT NULL]
   phone VARCHAR(11) [NULL]
   whatsapp VARCHAR(30) [NULL]
@@ -78,17 +85,35 @@ TABLE contacts_info {
 }
 ```
 
+## Salaries
+
+```sql
+// Salaries
+TABLE coaches_salaries {
+  id INTEGER [PK, NOT NULL]
+  salary INTEGER [DEFAULT: 0]
+
+  coach_id INTEGER [UNIQUE, ref: > coaches.id]
+}
+```
+
 ---
 
 ## Plans
 
 ```sql
+// ----------------------- \\
+// =======> Plans <======= \\
+// ----------------------- \\
 
+// Plans
 TABLE plans {
   id INTEGER [PK, NOT NULL]
   title VARCHAR(100) [NOT NULL]
   description VARCHAR(10000) [NULL]
-  price INTEGER [NOT NULL]
+  price INTEGER [DEFAULT: 0]
+  classes INTEGER [DEFAULT: 0]
+  max_days INTEGER [DEFAULT: 0]
   created_at TIMESTAMP [DEFAULT: `now()`]
   updated_at TIMESTAMP
 }
@@ -97,27 +122,27 @@ TABLE plans {
 ## Subscriptions
 
 ```sql
-
+// Subscriptions
 TABLE subscriptions {
   id INTEGER [PK, NOT NULL]
   subscribed_at TIMESTAMP [DEFAULT: `now()`]
+  is_finished BOOLEAN [DEFAULT: False]
 
   plan_id INTEGER [ref: > plans.id]
   coach_id INTEGER [ref: > coaches.id]
   member_id INTEGER [ref: > members.id]
 }
-
 ```
 
 ## Exercises
 
 ```sql
-
+// Exercises
 TABLE exercises {
   id INTEGER [PK, NOT NULL]
   title VARCHAR(100) [NOT NULL]
   description VARCHAR(10000)
-  done BOOLEAN
+  done BOOLEAN [DEFAULT: False]
   created_at TIMESTAMP [DEFAULT: `now()`]
 
   coach_id INTEGER [ref: > coaches.id]
@@ -129,12 +154,13 @@ TABLE exercises {
 ## Meals
 
 ```sql
+// Meals
 TABLE meals {
   id INTEGER [PK, NOT NULL]
   title VARCHAR(100) [NOT NULL]
   description VARCHAR(10000) [NULL]
   eat_at TIMESTAMP [NULL]
-  done BOOLEAN [NOT NULL]
+  done BOOLEAN [DEFAULT: False]
   created_at TIMESTAMP [DEFAULT: `now()`]
 
   coach_id INTEGER [ref: > coaches.id]
@@ -148,23 +174,39 @@ TABLE meals {
 ## Complaints
 
 ```sql
+// ---------------------------- \\
+// =======> Complaints <======= \\
+// ---------------------------- \\
 
+// Complaints
 TABLE complaints {
   id INTEGER [PK, NOT NULL]
   title VARCHAR(100) [NOT NULL]
   about VARCHAR(100) [NOT NULL]
   description VARCHAR(10000) [NULL]
-  send_to ENUM('admin', 'coach')
   created_at TIMESTAMP [DEFAULT: `now()`]
 
   member_id INTEGER [ref: > members.id]
-}
 
+  send_to ENUM(1, 2) [DEFAULT: 1]
+  // 1: admin
+  // 2: coach
+  status ENUM(1, 2) [DEFAULT: 1]
+  // 1: Not Seen
+  // 2: Seen
+}
 ```
+
+---
 
 ## Vacations
 
 ```sql
+// --------------------------- \\
+// =======> Vacations <======= \\
+// --------------------------- \\
+
+// Vacations
 TABLE vacations {
   id INTEGER [PK, NOT NULL]
   title VARCHAR(100) [NOT NULL]
@@ -172,12 +214,17 @@ TABLE vacations {
   reason VARCHAR(10000) [NULL]
   start_at TIMESTAMP [NOT NULL]
   end_at TIMESTAMP [NOT NULL]
-  is_accepted BOOLEAN
+  is_accepted BOOLEAN [NOT NULL]
   created_at TIMESTAMP [DEFAULT: `now()`]
 
   coach_id INTEGER [ref: > coaches.id]
-}
 
+  status ENUM(1, 2, 3, 4) [DEFAULT: 1]
+  // 1: Not Seen
+  // 2: Seen
+  // 3: Refused
+  // 4: Accepted
+}
 ```
 
 ---
@@ -185,7 +232,11 @@ TABLE vacations {
 ## Jobs
 
 ```sql
+// ---------------------- \\
+// =======> Jobs <======= \\
+// ---------------------- \\
 
+// Jobs
 TABLE jobs {
   id INTEGER [PK, NOT NULL]
   title VARCHAR(100) [NOT NULL]
@@ -193,21 +244,26 @@ TABLE jobs {
   requirements VARCHAR(10000) [NULL]
   details VARCHAR(10000) [NULL]
   skills VARCHAR(10000) [NULL]
-  available BOOLEAN [NOT NULL]
+  is_available BOOLEAN [DEFAULT: True]
   created_at TIMESTAMP [DEFAULT: `now()`]
 }
-
 ```
 
 ## Job applicants
 
 ```sql
+// Jobs Applicants
 TABLE job_applicants {
-  status ENUM('refused', 'accepted')
   created_at TIMESTAMP [DEFAULT: `now()`]
 
   job_id INTEGER [PK, ref: > jobs.id]
   applicant INTEGER [PK, ref: > accounts.id]
+
+  status ENUM(1, 2, 3, 4) [DEFAULT: 1]
+  // 1: Not Seen
+  // 2: Seen
+  // 3: Refused
+  // 4: Accepted
 }
 ```
 
@@ -216,6 +272,11 @@ TABLE job_applicants {
 ## Contact Us
 
 ```sql
+// -------------------------- \\
+// =======> Settings <======= \\
+// -------------------------- \\
+
+// Contact us
 TABLE contact_us {
   id INTEGER [PK, NOT NULL]
   country VARCHAR(30) [NULL]
@@ -229,13 +290,12 @@ TABLE contact_us {
   instagram VARCHAR(30) [NULL]
   twitter VARCHAR(30) [NULL]
 }
-
 ```
 
 ## About us
 
 ```sql
-
+// About us
 TABLE about_us {
   id INTEGER [PK, NOT NULL]
   the_face_of_your_business VARCHAR(20000) [NULL]
@@ -243,5 +303,4 @@ TABLE about_us {
   our_mission VARCHAR(20000) [NULL]
   our_goals VARCHAR(20000) [NULL]
 }
-
 ```
