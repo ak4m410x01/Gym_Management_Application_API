@@ -17,6 +17,11 @@ from dotenv import load_dotenv
 # Load .env environment variables
 load_dotenv()
 
+
+def dotenv(key: str) -> str:
+    return environ.get(key)
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -25,14 +30,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = environ.get("SECRET_KEY")
+SECRET_KEY = dotenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(environ.get("DEBUG"))
+DEBUG = bool(dotenv("DEBUG"))
 
 # Allowed Hosts
-ALLOWED_HOSTS = environ.get("ALLOWED_HOSTS").split(",")
-
+ALLOWED_HOSTS = dotenv("ALLOWED_HOSTS").split(",")
+print(ALLOWED_HOSTS)
 
 # Application definition
 INSTALLED_APPS = [
@@ -82,12 +87,12 @@ WSGI_APPLICATION = "project.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": environ.get("DATABASE_ENGINE"),
-        "HOST": environ.get("DATABASE_HOST"),
-        "PORT": environ.get("DATABASE_PORT"),
-        "NAME": environ.get("DATABASE_NAME"),
-        "USER": environ.get("DATABASE_USER"),
-        "PASSWORD": environ.get("DATABASE_PASSWORD"),
+        "ENGINE": dotenv("DATABASE_ENGINE"),
+        "HOST": dotenv("DATABASE_HOST"),
+        "PORT": dotenv("DATABASE_PORT"),
+        "NAME": dotenv("DATABASE_NAME"),
+        "USER": dotenv("DATABASE_USER"),
+        "PASSWORD": dotenv("DATABASE_PASSWORD"),
     }
 }
 
