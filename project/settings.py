@@ -37,7 +37,6 @@ DEBUG = bool(dotenv("DEBUG"))
 
 # Allowed Hosts
 ALLOWED_HOSTS = dotenv("ALLOWED_HOSTS").split(",")
-print(ALLOWED_HOSTS)
 
 # Application definition
 INSTALLED_APPS = [
