@@ -11,6 +11,7 @@ class Coach(models.Model):
 
 class Salary(models.Model):
     salary = models.IntegerField(default=0)
+    
     coach = models.OneToOneField(Coach, on_delete=models.CASCADE, unique=True)
 
     def __str__(self) -> str:

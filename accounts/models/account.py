@@ -16,13 +16,13 @@ class Contact(models.Model):
 class Account(models.Model):
     GENDER_CHOICES = (("M", "Male"), ("F", "Female"))
 
+    email = models.EmailField(max_length=255, unique=True)
+    username = models.CharField(max_length=255, unique=True)
+    password = models.CharField(max_length=5000)
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
     date_of_birth = models.DateField()
-    email = models.EmailField(max_length=255, unique=True)
-    username = models.CharField(max_length=255, unique=True)
-    password = models.CharField(max_length=5000)
     country = models.CharField(max_length=30, blank=True, null=True)
     city = models.CharField(max_length=30, blank=True, null=True)
     address = models.CharField(max_length=100, blank=True, null=True)
