@@ -26,7 +26,7 @@ TABLE accounts {
   first_login TIMESTAMP [NULL]
   last_login TIMESTAMP [NULL]
 
-  contact_info_id INTEGER [UNIQUE, ref: > contacts.id]
+  contact_id INTEGER [UNIQUE, ref: > contacts.id]
 }
 ```
 
