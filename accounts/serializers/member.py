@@ -3,8 +3,8 @@ from accounts.models.member import Member
 
 
 class MemberSerializer(serializers.ModelSerializer):
-    username = serializers.CharField(source="account.username")
     email = serializers.EmailField(source="account.email")
+    username = serializers.CharField(source="account.username")
     first_name = serializers.CharField(source="account.first_name")
     last_name = serializers.CharField(source="account.last_name")
     gender = serializers.CharField(source="account.gender")
@@ -26,8 +26,8 @@ class MemberSerializer(serializers.ModelSerializer):
         model = Member
         fields = [
             "id",
-            "username",
             "email",
+            "username",
             "first_name",
             "last_name",
             "gender",
