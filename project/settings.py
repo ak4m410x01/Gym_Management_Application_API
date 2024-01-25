@@ -12,17 +12,41 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 from dotenv import load_dotenv
-import os
+from os import path, environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Load .env environment variables
-load_dotenv(os.path.join(BASE_DIR, ".env"))
+load_dotenv(path.join(BASE_DIR, ".env"))
 
 
-def dotenv(key: str) -> str:
-    return os.environ.get(key)
+def dotenv(key: str):
+    value = environ.get(key)
+
+    # check if value is None
+    # Key Not Found
+    if value == None:
+        raise KeyError(f"'{key}' does not exists in '{path.join(BASE_DIR,'.env')}'")
+
+    # check if value is true
+    elif value.lower() == "true":
+        return True
+    # check if value is false
+    elif value.lower() == "false":
+        return False
+
+    # check if value is list
+    elif "," in value:
+        return value.split(",")
+
+    # check if value is int
+    try:
+        value = int(value)
+    except:
+        pass
+
+    return value
 
 
 # Quick-start development settings - unsuitable for production
@@ -32,10 +56,10 @@ def dotenv(key: str) -> str:
 SECRET_KEY = dotenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(dotenv("DEBUG"))
+DEBUG = dotenv("DEBUG")
 
 # Allowed Hosts
-ALLOWED_HOSTS = dotenv("ALLOWED_HOSTS").split(",")
+ALLOWED_HOSTS = dotenv("ALLOWED_HOSTS")
 
 # Application definition
 INSTALLED_APPS = [
