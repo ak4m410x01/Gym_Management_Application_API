@@ -73,6 +73,7 @@ INSTALLED_APPS = [
     # External Apps
     "rest_framework",
     # Project Apps
+    "api.apps.ApiConfig",
     "accounts.apps.AccountsConfig",
 ]
 
