@@ -11,19 +11,18 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
-from os import environ
 from dotenv import load_dotenv
-
-# Load .env environment variables
-load_dotenv()
-
-
-def dotenv(key: str) -> str:
-    return environ.get(key)
-
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Load .env environment variables
+load_dotenv(os.path.join(BASE_DIR, ".env"))
+
+
+def dotenv(key: str) -> str:
+    return os.environ.get(key)
 
 
 # Quick-start development settings - unsuitable for production
