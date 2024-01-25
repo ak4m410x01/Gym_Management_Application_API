@@ -1,6 +1,7 @@
 from django.urls import path
-from accounts.views.admin import AdminRetrieveUpdate
+from accounts.views.admin import AdminListCreate, AdminRetrieveUpdateDestroy
 
 urlpatterns = [
-    path("<int:pk>/", AdminRetrieveUpdate.as_view()),
+    path("", AdminListCreate.as_view()),
+    path("<int:pk>/", AdminRetrieveUpdateDestroy.as_view()),
 ]
