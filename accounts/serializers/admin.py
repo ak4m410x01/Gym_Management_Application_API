@@ -1,0 +1,47 @@
+from rest_framework import serializers
+from accounts.models.admin import Admin
+
+
+class AdminSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source="account.username")
+    email = serializers.EmailField(source="account.email")
+    first_name = serializers.CharField(source="account.first_name")
+    last_name = serializers.CharField(source="account.last_name")
+    gender = serializers.CharField(source="account.gender")
+    date_of_birth = serializers.DateField(source="account.date_of_birth")
+    country = serializers.CharField(source="account.country")
+    city = serializers.CharField(source="account.city")
+    address = serializers.CharField(source="account.address")
+    first_login = serializers.DateTimeField(source="account.first_login")
+    last_login = serializers.DateTimeField(source="account.last_login")
+    joined_at = serializers.DateTimeField(source="account.joined_at")
+    phone = serializers.CharField(source="account.contact.phone")
+    whatsapp = serializers.CharField(source="account.contact.whatsapp")
+    telegram = serializers.CharField(source="account.contact.telegram")
+    facebook = serializers.CharField(source="account.contact.facebook")
+    instagram = serializers.CharField(source="account.contact.instagram")
+    twitter = serializers.CharField(source="account.contact.twitter")
+
+    class Meta:
+        model = Admin
+        fields = [
+            "id",
+            "username",
+            "email",
+            "first_name",
+            "last_name",
+            "gender",
+            "date_of_birth",
+            "country",
+            "city",
+            "address",
+            "phone",
+            "whatsapp",
+            "telegram",
+            "facebook",
+            "instagram",
+            "twitter",
+            "first_login",
+            "last_login",
+            "joined_at",
+        ]
