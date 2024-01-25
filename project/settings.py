@@ -63,6 +63,7 @@ ALLOWED_HOSTS = dotenv("ALLOWED_HOSTS")
 
 # Application definition
 INSTALLED_APPS = [
+    # Default Apps
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -71,6 +72,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     # External Apps
     "rest_framework",
+    # Project Apps
+    "accounts.apps.AccountsConfig",
 ]
 
 MIDDLEWARE = [
