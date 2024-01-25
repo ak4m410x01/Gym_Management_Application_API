@@ -3,7 +3,7 @@ from accounts.models.member import Member
 from accounts.serializers.member import MemberSerializer
 
 
-class MemberList(generics.ListAPIView):
+class MemberListCreate(generics.ListCreateAPIView):
     queryset = Member.objects.all()
     serializer_class = MemberSerializer
 

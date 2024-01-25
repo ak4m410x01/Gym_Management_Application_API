@@ -3,6 +3,11 @@ from accounts.models.admin import Admin
 from accounts.serializers.admin import AdminSerializer
 
 
-class AdminRetrieveUpdate(generics.RetrieveUpdateAPIView):
+class AdminListCreate(generics.ListCreateAPIView):
+    queryset = Admin.objects.all()
+    serializer_class = AdminSerializer
+
+
+class AdminRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = Admin.objects.all()
     serializer_class = AdminSerializer

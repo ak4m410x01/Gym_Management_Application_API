@@ -3,7 +3,7 @@ from accounts.models.visitor import Visitor
 from accounts.serializers.visitor import VisitorSerializer
 
 
-class VisitorList(generics.ListAPIView):
+class VisitorListCreate(generics.ListCreateAPIView):
     queryset = Visitor.objects.all()
     serializer_class = VisitorSerializer
 
