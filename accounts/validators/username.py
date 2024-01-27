@@ -1,6 +1,7 @@
 from re import match
 from django.core.exceptions import ValidationError
 
+
 def usernameValidator(username: str):
     # Regular expression for usernames
     # username must start with [a-zA-Z_] and contains [a-zA-Z0-9_.]

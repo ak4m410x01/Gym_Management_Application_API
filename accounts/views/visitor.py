@@ -10,6 +10,7 @@ class VisitorListCreate(generics.ListCreateAPIView):
     queryset = Visitor.objects.all()
     serializer_class = VisitorSerializer
 
+
 class VisitorRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = Visitor.objects.all()
     serializer_class = VisitorSerializer
