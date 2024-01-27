@@ -1,13 +1,14 @@
 from re import match
 from rest_framework import serializers
-from accounts.models.visitor import Visitor
-from accounts.models.account import Account, Contact
+
+from ..models.visitor import Visitor
+from ..models.account import Account, Contact
 
 
-class VisitorSerializer(serializers.ModelSerializer):
+class BaseVisitorSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(source="account.email")
     username = serializers.CharField(source="account.username")
-    password = serializers.CharField(source="account.password")
+    password = serializers.CharField(source="account.password", write_only=True)
     first_name = serializers.CharField(source="account.first_name")
     last_name = serializers.CharField(source="account.last_name")
     gender = serializers.CharField(source="account.gender")
@@ -23,13 +24,18 @@ class VisitorSerializer(serializers.ModelSerializer):
     )
     twitter = serializers.CharField(source="account.contact.twitter", required=False)
     first_login = serializers.DateTimeField(
-        source="account.first_login", required=False
+        source="account.first_login", required=False, read_only=True
     )
-    last_login = serializers.DateTimeField(source="account.last_login", required=False)
-    joined_at = serializers.DateTimeField(source="account.joined_at", required=False)
+    last_login = serializers.DateTimeField(
+        source="account.last_login", required=False, read_only=True
+    )
+    joined_at = serializers.DateTimeField(
+        source="account.joined_at", required=False, read_only=True
+    )
 
     class Meta:
         model = Visitor
+        ordering = (id,)
         fields = [
             "id",
             "email",
@@ -51,6 +57,22 @@ class VisitorSerializer(serializers.ModelSerializer):
             "last_login",
             "joined_at",
         ]
+
+
+class VisitorSerializer(BaseVisitorSerializer):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.context.get("request") and self.context["request"].method == "PUT":
+            for field_name in [
+                "email",
+                "username",
+                "password",
+                "first_name",
+                "last_name",
+                "gender",
+                "date_of_birth",
+            ]:
+                self.fields[field_name].required = False
 
     def validate_username(self, username: str) -> str:
         if Account.objects.filter(username=username).exists():
@@ -77,3 +99,23 @@ class VisitorSerializer(serializers.ModelSerializer):
         visitor = Visitor.objects.create(account=account, **validated_data)
 
         return visitor
+
+    def update(self, instance, validated_data):
+        # Contact Model
+        contact_data = validated_data.pop("contact", {})
+        for key, value in contact_data.items():
+            setattr(instance.account.contact, key, value)
+        instance.account.contact.save()
+
+        # Contact Model
+        account_data = validated_data.pop("account", {})
+        for key, value in account_data.items():
+            setattr(instance.account, key, value)
+        instance.account.save()
+
+        # Visitor Model
+        for key, value in validated_data.items():
+            setattr(instance, key, value)
+        instance.save()
+
+        return instance
