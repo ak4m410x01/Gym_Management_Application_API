@@ -1,13 +1,14 @@
-from rest_framework import generics
-from accounts.models.member import Member
-from accounts.serializers.member import MemberSerializer
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+
+from ..models.member import Member
+from ..serializers.member import MemberSerializer
 
 
-class MemberListCreate(generics.ListCreateAPIView):
+class MemberListCreate(ListCreateAPIView):
     queryset = Member.objects.all()
     serializer_class = MemberSerializer
 
 
-class MemberRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
+class MemberRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
     queryset = Member.objects.all()
     serializer_class = MemberSerializer

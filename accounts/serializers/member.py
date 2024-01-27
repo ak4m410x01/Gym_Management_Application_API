@@ -1,7 +1,7 @@
 from re import match
 from rest_framework import serializers
 
-from ..models.visitor import Member
+from ..models.member import Member
 from ..models.account import Account, Contact
 
 

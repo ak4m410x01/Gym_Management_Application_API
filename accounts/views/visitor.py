@@ -1,17 +1,16 @@
-from django.db import IntegrityError
-from rest_framework import generics, status
-from rest_framework.response import Response
-from accounts.models.visitor import Visitor
-from accounts.models.account import Account, Contact
-from accounts.serializers.visitor import VisitorSerializer
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+
+from ..models.visitor import Visitor
+from ..models.account import Account, Contact
+from ..serializers.visitor import VisitorSerializer
 
 
-class VisitorListCreate(generics.ListCreateAPIView):
+class VisitorListCreate(ListCreateAPIView):
     queryset = Visitor.objects.all()
     serializer_class = VisitorSerializer
 
 
-class VisitorRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
+class VisitorRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
     queryset = Visitor.objects.all()
     serializer_class = VisitorSerializer
 

@@ -1,7 +1,7 @@
 from re import match
 from rest_framework import serializers
 
-from ..models.coach import Coach
+from ..models.coach import Coach, Salary
 from ..models.account import Account, Contact
 
 
@@ -44,9 +44,13 @@ class BaseCoachSerializer(serializers.ModelSerializer):
         source="account.address",
         required=False,
     )
+    
     salary = serializers.CharField(
+        source="salary.salary",
         required=False,
+        read_only=True,
     )
+    
     phone = serializers.CharField(
         source="account.contact.phone",
         required=False,
