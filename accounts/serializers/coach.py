@@ -6,31 +6,93 @@ from ..models.account import Account, Contact
 
 
 class BaseCoachSerializer(serializers.ModelSerializer):
-    email = serializers.EmailField(source="account.email")
-    username = serializers.CharField(source="account.username")
-    password = serializers.CharField(source="account.password", write_only=True)
-    first_name = serializers.CharField(source="account.first_name")
-    last_name = serializers.CharField(source="account.last_name")
-    gender = serializers.CharField(source="account.gender")
-    date_of_birth = serializers.DateField(source="account.date_of_birth")
-    city = serializers.CharField(source="account.city", required=False)
-    address = serializers.CharField(source="account.address", required=False)
-    phone = serializers.CharField(source="account.contact.phone", required=False)
-    whatsapp = serializers.CharField(source="account.contact.whatsapp", required=False)
-    telegram = serializers.CharField(source="account.contact.telegram", required=False)
-    facebook = serializers.CharField(source="account.contact.facebook", required=False)
+    email = serializers.EmailField(
+        source="account.email",
+    )
+
+    username = serializers.CharField(
+        source="account.username",
+    )
+
+    password = serializers.CharField(
+        source="account.password",
+        write_only=True,
+    )
+
+    first_name = serializers.CharField(
+        source="account.first_name",
+    )
+
+    last_name = serializers.CharField(
+        source="account.last_name",
+    )
+
+    gender = serializers.CharField(
+        source="account.gender",
+    )
+
+    date_of_birth = serializers.DateField(
+        source="account.date_of_birth",
+    )
+
+    city = serializers.CharField(
+        source="account.city",
+        required=False,
+    )
+
+    address = serializers.CharField(
+        source="account.address",
+        required=False,
+    )
+    salary = serializers.CharField(
+        required=False,
+    )
+    phone = serializers.CharField(
+        source="account.contact.phone",
+        required=False,
+    )
+
+    whatsapp = serializers.CharField(
+        source="account.contact.whatsapp",
+        required=False,
+    )
+
+    telegram = serializers.CharField(
+        source="account.contact.telegram",
+        required=False,
+    )
+
+    facebook = serializers.CharField(
+        source="account.contact.facebook",
+        required=False,
+    )
+
     instagram = serializers.CharField(
-        source="account.contact.instagram", required=False
+        source="account.contact.instagram",
+        required=False,
     )
-    twitter = serializers.CharField(source="account.contact.twitter", required=False)
+
+    twitter = serializers.CharField(
+        source="account.contact.twitter",
+        required=False,
+    )
+
     first_login = serializers.DateTimeField(
-        source="account.first_login", required=False, read_only=True
+        source="account.first_login",
+        required=False,
+        read_only=True,
     )
+
     last_login = serializers.DateTimeField(
-        source="account.last_login", required=False, read_only=True
+        source="account.last_login",
+        required=False,
+        read_only=True,
     )
+
     joined_at = serializers.DateTimeField(
-        source="account.joined_at", required=False, read_only=True
+        source="account.joined_at",
+        required=False,
+        read_only=True,
     )
 
     class Meta:
@@ -58,16 +120,13 @@ class BaseCoachSerializer(serializers.ModelSerializer):
             "last_login",
             "joined_at",
         ]
-        extra_kwargs = {
-            "salary": {"required": False},
-        }
 
 
 class CoachSerializer(BaseCoachSerializer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if self.context.get("request") and self.context["request"].method == "PUT":
-            for field_name in [
+            for field_name in (
                 "email",
                 "username",
                 "password",
@@ -75,7 +134,7 @@ class CoachSerializer(BaseCoachSerializer):
                 "last_name",
                 "gender",
                 "date_of_birth",
-            ]:
+            ):
                 self.fields[field_name].required = False
 
     def validate_username(self, username: str) -> str:
@@ -111,7 +170,7 @@ class CoachSerializer(BaseCoachSerializer):
             setattr(instance.account.contact, key, value)
         instance.account.contact.save()
 
-        # Contact Model
+        # Account Model
         account_data = validated_data.pop("account", {})
         for key, value in account_data.items():
             setattr(instance.account, key, value)
