@@ -1,8 +1,8 @@
 from re import match
 from rest_framework import serializers
 
-from ..models.visitor import Visitor
-from ..models.account import Account, Contact
+from accounts.models.visitor import Visitor
+from accounts.models.account import Account, Contact
 
 
 class BaseVisitorSerializer(serializers.ModelSerializer):

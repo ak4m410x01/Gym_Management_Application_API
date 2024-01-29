@@ -1,7 +1,7 @@
 from rest_framework.generics import ListAPIView
 
-from ..models.account import Account
-from ..serializers.account import AccountSerializer
+from accounts.models.account import Account
+from accounts.serializers.account import AccountSerializer
 
 
 class AccountListAPIView(ListAPIView):

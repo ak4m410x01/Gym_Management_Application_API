@@ -1,6 +1,6 @@
 from django.urls import path
 
-from ..views.coach import CoachListCreate, CoachMemberRetrieveUpdateDestroy
+from accounts.views.coach import CoachListCreate, CoachMemberRetrieveUpdateDestroy
 
 urlpatterns = [
     path("", CoachListCreate.as_view()),

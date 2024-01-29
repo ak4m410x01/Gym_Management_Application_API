@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ..models.account import Account, Contact
+from accounts.models.account import Account, Contact
 
 
 class ContactSerializer(serializers.ModelSerializer):

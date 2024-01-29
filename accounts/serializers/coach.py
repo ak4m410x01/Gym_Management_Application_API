@@ -1,8 +1,8 @@
 from re import match
 from rest_framework import serializers
 
-from ..models.coach import Coach, Salary
-from ..models.account import Account, Contact
+from accounts.models.coach import Coach, Salary
+from accounts.models.account import Account, Contact
 
 
 class BaseCoachSerializer(serializers.ModelSerializer):

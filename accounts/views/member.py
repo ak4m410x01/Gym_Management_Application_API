@@ -2,8 +2,8 @@ from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIV
 
 from accounts.models.account import Account, Contact
 
-from ..models.member import Member
-from ..serializers.member import MemberSerializer
+from accounts.models.member import Member
+from accounts.serializers.member import MemberSerializer
 
 
 class MemberListCreate(ListCreateAPIView):

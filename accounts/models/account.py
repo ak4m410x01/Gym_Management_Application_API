@@ -1,13 +1,13 @@
 from django.db import models
 
-from ..validators.gender import genderValidator
-from ..validators.phone_number import phoneNumberEgyptValidator
-from ..validators.whatsappLink import whastappLinkEgyptValidator
-from ..validators.telegramLink import telegramLinkValidator
-from ..validators.facebookLink import facebookLinkValidator
-from ..validators.instagramLink import instagramLinkValidator
-from ..validators.twitterLink import twitterLinkValidator
-from ..validators.username import usernameValidator
+from accounts.validators.gender import genderValidator
+from accounts.validators.phone_number import phoneNumberEgyptValidator
+from accounts.validators.whatsappLink import whastappLinkEgyptValidator
+from accounts.validators.telegramLink import telegramLinkValidator
+from accounts.validators.facebookLink import facebookLinkValidator
+from accounts.validators.instagramLink import instagramLinkValidator
+from accounts.validators.twitterLink import twitterLinkValidator
+from accounts.validators.username import usernameValidator
 
 
 class Contact(models.Model):

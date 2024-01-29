@@ -1,5 +1,5 @@
 from django.db import models
-from .account import Account
+from accounts.models.account import Account
 
 
 class Visitor(models.Model):

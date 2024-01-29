@@ -1,6 +1,6 @@
 from django.urls import path
 
-from ..views.admin import AdminListCreate, AdminRetrieveUpdateDestroy
+from accounts.views.admin import AdminListCreate, AdminRetrieveUpdateDestroy
 
 urlpatterns = [
     path("", AdminListCreate.as_view()),

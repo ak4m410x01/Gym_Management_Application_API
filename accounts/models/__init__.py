@@ -1,12 +1,12 @@
-from .account import Account
-from .account import Contact
+from accounts.models.account import Account
+from accounts.models.account import Contact
 
 # Actors
-from .admin import Admin
+from accounts.models.admin import Admin
 
-from .coach import Coach
-from .coach import Salary
+from accounts.models.coach import Coach
+from accounts.models.coach import Salary
 
-from .member import Member
+from accounts.models.member import Member
 
-from .visitor import Visitor
+from accounts.models.visitor import Visitor

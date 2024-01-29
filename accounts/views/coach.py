@@ -2,8 +2,8 @@ from rest_framework import generics
 
 from accounts.models.account import Account, Contact
 
-from ..models.coach import Coach
-from ..serializers.coach import CoachSerializer
+from accounts.models.coach import Coach
+from accounts.serializers.coach import CoachSerializer
 
 
 class CoachListCreate(generics.ListCreateAPIView):

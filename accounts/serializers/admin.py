@@ -1,8 +1,8 @@
 from re import match
 from rest_framework import serializers
 
-from ..models.admin import Admin
-from ..models.account import Account, Contact
+from accounts.models.admin import Admin
+from accounts.models.account import Account, Contact
 
 
 class BaseAdminSerializer(serializers.ModelSerializer):

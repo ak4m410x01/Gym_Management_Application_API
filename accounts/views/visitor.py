@@ -1,8 +1,8 @@
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 
-from ..models.visitor import Visitor
-from ..models.account import Account, Contact
-from ..serializers.visitor import VisitorSerializer
+from accounts.models.visitor import Visitor
+from accounts.models.account import Account, Contact
+from accounts.serializers.visitor import VisitorSerializer
 
 
 class VisitorListCreate(ListCreateAPIView):
