@@ -75,6 +75,7 @@ INSTALLED_APPS = [
     # Project Apps
     "api.apps.ApiConfig",
     "accounts.apps.AccountsConfig",
+    "authentication.apps.AuthenticationConfig",
 ]
 
 MIDDLEWARE = [
