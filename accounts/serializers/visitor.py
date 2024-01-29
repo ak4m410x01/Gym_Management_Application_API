@@ -136,29 +136,19 @@ class VisitorSerializer(BaseVisitorSerializer):
 
     def validate_username(self, username: str) -> str:
         if Account.objects.filter(username=username).exists():
-            raise serializers.ValidationError(f"username already exists.")
+            raise serializers.ValidationError("username already exists.")
         return username
 
     def validate_email(self, email: str) -> str:
         if Account.objects.filter(email=email).exists():
-            raise serializers.ValidationError(f"email already exists.")
+            raise serializers.ValidationError("email already exists.")
         return email
 
     def validate_gender(self, gender: str) -> str:
         regex = r"^[MF]$"
         if not match(regex, gender):
-            raise serializers.ValidationError(f"gender must be 'M' or 'F'.")
+            raise serializers.ValidationError("gender must be 'M' or 'F'.")
         return gender
-
-    def create(self, validated_data):
-        contact_data = validated_data.pop("contact", {})
-        account_data = validated_data.pop("account", {})
-
-        contact = Contact.objects.create(**contact_data)
-        account = Account.objects.create(contact=contact, **account_data)
-        visitor = Visitor.objects.create(account=account, **validated_data)
-
-        return visitor
 
     def update(self, instance, validated_data):
         # Contact Model

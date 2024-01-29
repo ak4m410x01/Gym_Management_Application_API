@@ -72,6 +72,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     # External Apps
     "rest_framework",
+    "rest_framework_simplejwt",
     # Project Apps
     "api.apps.ApiConfig",
     "accounts.apps.AccountsConfig",
@@ -91,9 +92,16 @@ MIDDLEWARE = [
 ROOT_URLCONF = "project.urls"
 
 REST_FRAMEWORK = {
+    # Authentication
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
+    # Pagination
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
     "PAGE_SIZE": 20,
 }
+
+# SIMPLE_JWT = {}
 
 TEMPLATES = [
     {
