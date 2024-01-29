@@ -5,6 +5,7 @@ from accounts.models.account import Account, Contact
 class ContactSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contact
+        ordering = (id,)
         fields = "__all__"
 
 
