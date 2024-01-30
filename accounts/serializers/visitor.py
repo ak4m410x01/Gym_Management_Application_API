@@ -74,7 +74,7 @@ class BaseVisitorSerializer(serializers.ModelSerializer):
         source="account.contact.twitter",
         required=False,
     )
-    
+
     is_active = serializers.BooleanField(
         source="account.is_active",
         required=False,
@@ -149,6 +149,16 @@ class VisitorSerializer(BaseVisitorSerializer):
         if not match(regex, gender):
             raise serializers.ValidationError("gender must be 'M' or 'F'.")
         return gender
+
+    def create(self, validated_data):
+        contact_data = validated_data.pop("contact", {})
+        account_data = validated_data.pop("account", {})
+
+        contact = Contact.objects.create(**contact_data)
+        account = Account.objects.create(contact=contact, **account_data)
+        visitor = Visitor.objects.create(account=account, **validated_data)
+
+        return visitor
 
     def update(self, instance, validated_data):
         # Contact Model
