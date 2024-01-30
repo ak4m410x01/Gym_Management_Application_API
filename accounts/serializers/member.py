@@ -74,6 +74,12 @@ class BaseMemberSerializer(serializers.ModelSerializer):
         source="account.contact.twitter",
         required=False,
     )
+    
+    is_active = serializers.BooleanField(
+        source="account.is_active",
+        required=False,
+        read_only=True,
+    )
 
     first_login = serializers.DateTimeField(
         source="account.first_login",
@@ -113,6 +119,7 @@ class BaseMemberSerializer(serializers.ModelSerializer):
             "facebook",
             "instagram",
             "twitter",
+            "is_active",
             "first_login",
             "last_login",
             "joined_at",
