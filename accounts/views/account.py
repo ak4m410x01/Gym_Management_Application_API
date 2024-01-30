@@ -1,5 +1,4 @@
 from rest_framework.generics import ListAPIView
-from rest_framework.filters import SearchFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from accounts.models.account import Account
 from accounts.serializers.account import AccountSerializer

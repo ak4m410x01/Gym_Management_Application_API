@@ -1,13 +1,17 @@
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from django_filters.rest_framework import DjangoFilterBackend
 
 from accounts.models.visitor import Visitor
 from accounts.models.account import Account, Contact
 from accounts.serializers.visitor import VisitorSerializer
+from accounts.filters.visitor import VisitorFilter
 
 
 class VisitorListCreate(ListCreateAPIView):
     queryset = Visitor.objects.all()
     serializer_class = VisitorSerializer
+    filter_backends = (DjangoFilterBackend,)
+    filterset_class = VisitorFilter
 
 
 class VisitorRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
