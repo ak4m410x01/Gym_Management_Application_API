@@ -4,10 +4,14 @@ from accounts.models.account import Account
 
 class AccountFilter(django_filters.FilterSet):
     role = django_filters.CharFilter(method="filter_by_role")
+    username = django_filters.CharFilter(lookup_expr="icontains")
+    email = django_filters.CharFilter(lookup_expr="icontains")
+    first_name = django_filters.CharFilter(lookup_expr="icontains")
+    last_name = django_filters.CharFilter(lookup_expr="icontains")
 
     class Meta:
         model = Account
-        fields = ["role"]
+        fields = ["role", "username", "email", "first_name", "last_name"]
 
     def filter_by_role(self, queryset, name, value):
         if value == "admin":
