@@ -8,6 +8,7 @@ from accounts.validators.facebookLink import facebookLinkValidator
 from accounts.validators.instagramLink import instagramLinkValidator
 from accounts.validators.twitterLink import twitterLinkValidator
 from accounts.validators.username import usernameValidator
+from accounts.validators.date_of_birth import dateOfBirthValidator
 
 
 class Contact(models.Model):
@@ -86,7 +87,9 @@ class Account(models.Model):
         validators=[genderValidator],
     )
 
-    date_of_birth = models.DateField()
+    date_of_birth = models.DateField(
+        validators=[dateOfBirthValidator],
+    )
 
     city = models.CharField(
         max_length=30,
