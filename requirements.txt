@@ -1,6 +1,2 @@
-Django==5.0.1
-djangorestframework==3.14.0
-djangorestframework-simplejwt==5.3.1
-django-filter==23.5
-psycopg2-binary==2.9.9
-python-decouple==3.8
+-r requirements/base.txt
+-r requirements/develop.txt
