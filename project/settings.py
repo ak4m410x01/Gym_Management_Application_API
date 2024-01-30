@@ -30,24 +30,32 @@ DEBUG = config("DEBUG", default=False, cast=bool)
 # Allowed Hosts
 ALLOWED_HOSTS = config("ALLOWED_HOSTS", cast=Csv())
 
-# Application definition
-INSTALLED_APPS = [
-    # Default Apps
+# Default Apps
+DJANGO_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    # External Apps
+]
+
+# Third party apps
+THIRD_PARTY_APPS = [
     "rest_framework",
     "rest_framework_simplejwt",
     "django_filters",
-    # Project Apps
+]
+
+# Custom Apps
+PROJECT_APPS = [
     "api.apps.ApiConfig",
     "accounts.apps.AccountsConfig",
     "authentication.apps.AuthenticationConfig",
 ]
+
+# Combine all apps
+INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + PROJECT_APPS
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
