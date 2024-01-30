@@ -74,6 +74,7 @@ INSTALLED_APPS = [
     # External Apps
     "rest_framework",
     "rest_framework_simplejwt",
+    "django_filters",
     # Project Apps
     "api.apps.ApiConfig",
     "accounts.apps.AccountsConfig",
@@ -100,6 +101,8 @@ REST_FRAMEWORK = {
     # Pagination
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
     "PAGE_SIZE": 20,
+    # Filtering
+    "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
 }
 
 SIMPLE_JWT = {
