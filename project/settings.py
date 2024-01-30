@@ -12,55 +12,23 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from datetime import timedelta
 from pathlib import Path
-from dotenv import load_dotenv
-from os import path, environ
+from decouple import config, Csv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-# Load .env environment variables
-load_dotenv(path.join(BASE_DIR, ".env"))
-
-
-def dotenv(key: str):
-    value = environ.get(key)
-
-    # check if value is None
-    # Key Not Found
-    if value == None:
-        raise KeyError(f"'{key}' does not exists in '{path.join(BASE_DIR,'.env')}'")
-
-    # check if value is true
-    elif value.lower() == "true":
-        return True
-    # check if value is false
-    elif value.lower() == "false":
-        return False
-
-    # check if value is list
-    elif "," in value:
-        return value.split(",")
-
-    # check if value is int
-    try:
-        value = int(value)
-    except:
-        pass
-
-    return value
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = dotenv("SECRET_KEY")
+SECRET_KEY = config("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = dotenv("DEBUG")
+DEBUG = config("DEBUG", default=False, cast=bool)
 
 # Allowed Hosts
-ALLOWED_HOSTS = dotenv("ALLOWED_HOSTS")
+ALLOWED_HOSTS = config("ALLOWED_HOSTS", cast=Csv())
 
 # Application definition
 INSTALLED_APPS = [
@@ -155,12 +123,12 @@ WSGI_APPLICATION = "project.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": dotenv("DATABASE_ENGINE"),
-        "HOST": dotenv("DATABASE_HOST"),
-        "PORT": dotenv("DATABASE_PORT"),
-        "NAME": dotenv("DATABASE_NAME"),
-        "USER": dotenv("DATABASE_USER"),
-        "PASSWORD": dotenv("DATABASE_PASSWORD"),
+        "ENGINE": config("DATABASE_ENGINE"),
+        "HOST": config("DATABASE_HOST"),
+        "PORT": config("DATABASE_PORT", cast=int),
+        "NAME": config("DATABASE_NAME"),
+        "USER": config("DATABASE_USER"),
+        "PASSWORD": config("DATABASE_PASSWORD"),
     }
 }
 
