@@ -13,8 +13,3 @@ djangorestframework-simplejwt==5.3.1
 # Environment variable
 # --------------------
 python-decouple==3.8
-
-# ===============================================================================
-# Database
-# --------------------
-psycopg2-binary==2.9.9
