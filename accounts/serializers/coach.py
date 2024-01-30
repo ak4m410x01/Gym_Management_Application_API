@@ -158,8 +158,8 @@ class CoachSerializer(BaseCoachSerializer):
         return gender
 
     def create(self, validated_data):
-        contact_data = validated_data.pop("contact", {})
         account_data = validated_data.pop("account", {})
+        contact_data = account_data.pop("contact", {})
 
         contact = Contact.objects.create(**contact_data)
         account = Account.objects.create(contact=contact, **account_data)
