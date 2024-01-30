@@ -100,11 +100,8 @@ class Account(models.Model):
         null=True,
     )
 
-    is_active = models.BooleanField(default=True)
-
-    first_login = models.DateTimeField(
-        blank=True,
-        null=True,
+    is_active = models.BooleanField(
+        default=True,
     )
 
     last_login = models.DateTimeField(

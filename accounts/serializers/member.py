@@ -80,13 +80,7 @@ class BaseMemberSerializer(serializers.ModelSerializer):
         required=False,
         read_only=True,
     )
-
-    first_login = serializers.DateTimeField(
-        source="account.first_login",
-        required=False,
-        read_only=True,
-    )
-
+    
     last_login = serializers.DateTimeField(
         source="account.last_login",
         required=False,
@@ -120,7 +114,6 @@ class BaseMemberSerializer(serializers.ModelSerializer):
             "instagram",
             "twitter",
             "is_active",
-            "first_login",
             "last_login",
             "joined_at",
         ]

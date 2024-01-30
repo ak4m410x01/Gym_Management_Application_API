@@ -42,7 +42,6 @@ class AccountSerializer(serializers.ModelSerializer):
             "instagram",
             "twitter",
             "is_active",
-            "first_login",
             "last_login",
             "joined_at",
         ]
