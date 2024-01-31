@@ -41,7 +41,7 @@ class VerifyEmail(GenericAPIView):
 
             account.is_verified = True
             account.save()
-            signin_url = f"http://{get_current_site(request).domain}{reverse('signin')}"
+            signin_url = f"{'https' if request.is_secure() else 'http'}://{request.get_host()}{reverse('signin')}"
             response["email"] = "Verification is successful."
             response["signin"] = f"Signin now {signin_url}"
 

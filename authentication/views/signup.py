@@ -24,7 +24,7 @@ class SignUp(APIView):
             if "user_id" in token:
                 del token["user_id"]
 
-            verify_url = f"http://{get_current_site(request).domain}{reverse('verifyemail')}?token={token}"
+            verify_url = f"{'https' if request.is_secure() else 'http'}://{request.get_host()}{reverse('verifyemail')}?token={token}"
             email = {
                 "to": visitor.account.email,
                 "subject": "GYM Sign Up Verification",
