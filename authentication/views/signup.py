@@ -1,17 +1,20 @@
 from django.conf.global_settings import EMAIL_HOST_USER
-from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import send_mail
 from django.urls import reverse
 
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
+
 
 from authentication.serializers.signup import SignUpSerializer
 
 
 class SignUp(APIView):
+    permission_classes = (AllowAny,)
+
     def post(self, request):
         serializer = SignUpSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
