@@ -49,12 +49,12 @@ class SignIn(APIView):
             response = {}
             if not account:
                 response["error"] = "Invalid credentials."
+                return Response(response, status=status.HTTP_401_UNAUTHORIZED)
             if not account.is_active:
                 response["error"] = "Account inactive."
+                return Response(response, status=status.HTTP_401_UNAUTHORIZED)
             if not account.is_verified:
                 response["error"] = "Account not verified."
-
-            if "error" in response:
                 return Response(response, status=status.HTTP_401_UNAUTHORIZED)
 
             account = self.get_account(account)
