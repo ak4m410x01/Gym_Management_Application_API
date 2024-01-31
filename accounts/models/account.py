@@ -106,6 +106,10 @@ class Account(models.Model):
     is_active = models.BooleanField(
         default=True,
     )
+    
+    is_verified = models.BooleanField(
+        default=False,
+    )
 
     last_login = models.DateTimeField(
         blank=True,
