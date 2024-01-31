@@ -1,15 +1,17 @@
 import jwt
 from decouple import config
 
+from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
+
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework import status
 
 from accounts.models.visitor import Account
 
-class VerifyEmail(GenericAPIView):
 
+class VerifyEmail(GenericAPIView):
     def get(self, request, *args, **kwargs):
         token = request.GET.get("token")
         response = {}
@@ -36,7 +38,7 @@ class VerifyEmail(GenericAPIView):
 
             account.is_verified = True
             account.save()
-            signin_url = request.build_absolute_uri(reverse("authentication:signin"))
+            signin_url = f"http://{get_current_site(request).domain}{reverse('signin')}"
             response["email"] = "Verification is successful."
             response["signin"] = f"Signin now {signin_url}"
 

@@ -1,4 +1,5 @@
 from django.conf.global_settings import EMAIL_HOST_USER
+from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import send_mail
 from django.urls import reverse
 
@@ -23,7 +24,7 @@ class SignUp(APIView):
             if "user_id" in token:
                 del token["user_id"]
 
-            verify_url = f"{request.build_absolute_uri(reverse('authentication:verifyemail'))}?token={token}"
+            verify_url = f"http://{get_current_site(request).domain}{reverse('verifyemail')}?token={token}"
             email = {
                 "to": visitor.account.email,
                 "subject": "GYM Sign Up Verification",
