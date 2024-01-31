@@ -81,6 +81,8 @@ REST_FRAMEWORK = {
     "PAGE_SIZE": 20,
     # Filtering
     "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
+    # Error Field
+    "non_field_errors": "error",
 }
 
 SIMPLE_JWT = {
