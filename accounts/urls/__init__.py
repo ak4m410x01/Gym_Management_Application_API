@@ -6,6 +6,7 @@ from accounts.urls.coach import urlpatterns as coach_urls
 from accounts.urls.member import urlpatterns as member_urls
 from accounts.urls.visitor import urlpatterns as visitor_urls
 
+app_name = "accounts"
 
 urlpatterns = [
     path("", include(account_urls)),
