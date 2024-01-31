@@ -1,3 +1,4 @@
+from typing import Dict
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -17,35 +18,24 @@ class SignIn(APIView):
         account = Account.objects.filter(username=username, password=password).first()
         return account
 
-    def get_account(self, account: Account):
-        response = {}
-        try:
-            response["account"] = account.admin
-            response["role"] = "admin"
-        except Admin.DoesNotExist:
-            pass
-
-        try:
-            response["account"] = account.coach
-            response["role"] = "coach"
-        except Coach.DoesNotExist:
-            pass
-
-        try:
-            response["account"] = account.member
-            response["role"] = "member"
-        except Member.DoesNotExist:
-            pass
-
-        try:
-            response["account"] = account.visitor
-            response["role"] = "visitor"
-        except Visitor.DoesNotExist:
-            pass
-
+    def get_account(self, account: Account) -> Dict:
+        response = {"account": None, "role": None}
+        models = (
+            (Admin, "admin"),
+            (Coach, "coach"),
+            (Member, "member"),
+            (Visitor, "visitor"),
+        )
+        for model, role in models:
+            try:
+                response["account"] = getattr(account, model.__name__.lower())
+                response["role"] = role
+                break
+            except model.DoesNotExist:
+                pass
         return response
 
-    def post(self, request):
+    def post(self, request) -> Response:
         serializer = SignInSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             username = serializer.data.get("username")
@@ -56,12 +46,12 @@ class SignIn(APIView):
             response = {}
             if not account:
                 response["error"] = "Invalid credentials."
-                return Response(response, status=status.HTTP_401_UNAUTHORIZED)
             if not account.is_active:
                 response["error"] = "Account inactive."
-                return Response(response, status=status.HTTP_401_UNAUTHORIZED)
-            if account.is_verified:
+            if not account.is_verified:
                 response["error"] = "Account not verified."
+
+            if "error" in response:
                 return Response(response, status=status.HTTP_401_UNAUTHORIZED)
 
             account = self.get_account(account)
