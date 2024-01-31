@@ -9,9 +9,12 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from accounts.models.visitor import Account
+from authentication.serializers.token import EmailVerificationSerializer
 
 
 class VerifyEmail(GenericAPIView):
+    serializer_class = EmailVerificationSerializer
+
     def get(self, request, *args, **kwargs):
         token = request.GET.get("token")
         response = {}

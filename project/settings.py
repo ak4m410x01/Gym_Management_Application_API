@@ -45,6 +45,7 @@ THIRD_PARTY_APPS = [
     "rest_framework",
     "rest_framework_simplejwt",
     "django_filters",
+    "drf_yasg",
 ]
 
 # Custom Apps
@@ -52,6 +53,7 @@ PROJECT_APPS = [
     "api.apps.ApiConfig",
     "accounts.apps.AccountsConfig",
     "authentication.apps.AuthenticationConfig",
+    "docs.apps.DocsConfig",
 ]
 
 # Combine all apps
