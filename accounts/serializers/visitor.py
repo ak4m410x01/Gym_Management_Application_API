@@ -81,6 +81,12 @@ class BaseVisitorSerializer(serializers.ModelSerializer):
         read_only=True,
     )
 
+    is_verified = serializers.BooleanField(
+        source="account.is_active",
+        required=False,
+        read_only=True,
+    )
+
     last_login = serializers.DateTimeField(
         source="account.last_login",
         required=False,
@@ -114,6 +120,7 @@ class BaseVisitorSerializer(serializers.ModelSerializer):
             "instagram",
             "twitter",
             "is_active",
+            "is_verified",
             "last_login",
             "joined_at",
         ]
