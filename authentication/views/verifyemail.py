@@ -1,10 +1,10 @@
 import jwt
 from decouple import config
 
-from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
 
 from rest_framework.generics import GenericAPIView
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework import status
 
@@ -14,6 +14,7 @@ from authentication.serializers.token import EmailVerificationSerializer
 
 class VerifyEmail(GenericAPIView):
     serializer_class = EmailVerificationSerializer
+    permission_classes = (AllowAny,)
 
     def get(self, request, *args, **kwargs):
         token = request.GET.get("token")

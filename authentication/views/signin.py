@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.permissions import AllowAny
 
 from accounts.models.account import Account
 from accounts.models.admin import Admin
@@ -14,6 +15,8 @@ from authentication.serializers.signin import SignInSerializer
 
 
 class SignIn(APIView):
+    permission_classes = (AllowAny,)
+
     def is_authenticated(self, username: str, password: str) -> Account:
         account = Account.objects.filter(username=username, password=password).first()
         return account
