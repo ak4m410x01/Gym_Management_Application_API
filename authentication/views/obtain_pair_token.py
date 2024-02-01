@@ -11,10 +11,10 @@ from accounts.models.admin import Admin
 from accounts.models.coach import Coach
 from accounts.models.member import Member
 from accounts.models.visitor import Visitor
-from authentication.serializers.signin import SignInSerializer
+from authentication.serializers.obtain_pair_token import SignInSerializer
 
 
-class SignIn(APIView):
+class ObtainPairTokenView(APIView):
     permission_classes = (AllowAny,)
 
     def is_authenticated(self, username: str, password: str) -> User:

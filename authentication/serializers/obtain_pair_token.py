@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 
-class SignInSerializer(serializers.Serializer):
+class ObtainPairTokenSerializer(serializers.Serializer):
     username = serializers.CharField(required=True, allow_blank=False)
     password = serializers.CharField(required=True, allow_blank=False)
 
