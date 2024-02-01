@@ -25,12 +25,8 @@ class BaseMemberSerializer(serializers.ModelSerializer):
     instagram = serializers.CharField(source="user.contact.instagram", required=False)
     twitter = serializers.CharField(source="user.contact.twitter", required=False)
 
-    is_active = serializers.BooleanField(
-        source="user.is_active", required=False, read_only=True
-    )
-    is_verified = serializers.BooleanField(
-        source="user.is_active", required=False, read_only=True
-    )
+    is_active = serializers.BooleanField(source="user.is_active", required=False, read_only=True)
+    is_verified = serializers.BooleanField(source="user.is_active", required=False, read_only=True)
 
     last_login = serializers.DateTimeField(
         source="user.last_login", required=False, read_only=True
@@ -70,15 +66,7 @@ class MemberSerializer(BaseMemberSerializer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if self.context.get("request") and self.context["request"].method == "PUT":
-            for field_name in (
-                "email",
-                "username",
-                "password",
-                "first_name",
-                "last_name",
-                "gender",
-                "date_of_birth",
-            ):
+            for field_name in ("email", "username", "password", "first_name", "last_name", "gender", "date_of_birth"):
                 self.fields[field_name].required = False
 
     def validate_username(self, username: str) -> str:

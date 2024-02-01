@@ -62,15 +62,7 @@ class AdminSerializer(BaseAdminSerializer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if self.context.get("request") and self.context["request"].method == "PUT":
-            for field_name in (
-                "email",
-                "username",
-                "password",
-                "first_name",
-                "last_name",
-                "gender",
-                "date_of_birth",
-            ):
+            for field_name in ("email", "username", "password", "first_name", "last_name", "gender", "date_of_birth"):
                 self.fields[field_name].required = False
 
     def validate_username(self, username: str) -> str:
@@ -106,7 +98,7 @@ class AdminSerializer(BaseAdminSerializer):
             setattr(instance.user.contact, key, value)
         instance.user.contact.save()
 
-        # user Model
+        # User Model
         user_data = validated_data.pop("user", {})
         for key, value in user_data.items():
             setattr(instance.user, key, value)

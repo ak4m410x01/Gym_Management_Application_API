@@ -1,7 +1,7 @@
 from re import match
 from rest_framework import serializers
 
-from accounts.models.coach import Coach, Salary
+from accounts.models.coach import Coach
 from accounts.models.user import User, Contact
 
 
@@ -64,15 +64,7 @@ class CoachSerializer(BaseCoachSerializer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if self.context.get("request") and self.context["request"].method == "PUT":
-            for field_name in (
-                "email",
-                "username",
-                "password",
-                "first_name",
-                "last_name",
-                "gender",
-                "date_of_birth",
-            ):
+            for field_name in ("email", "username", "password", "first_name", "last_name", "gender", "date_of_birth"):
                 self.fields[field_name].required = False
 
     def validate_username(self, username: str) -> str:
