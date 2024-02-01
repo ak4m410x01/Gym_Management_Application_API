@@ -30,6 +30,9 @@ DEBUG = config("DEBUG", default=False, cast=bool)
 # Allowed Hosts
 ALLOWED_HOSTS = config("ALLOWED_HOSTS", cast=Csv())
 
+# User Model
+AUTH_USER_MODEL = "accounts.User"
+
 # Default Apps
 DJANGO_APPS = [
     "django.contrib.admin",
@@ -45,7 +48,6 @@ THIRD_PARTY_APPS = [
     "rest_framework",
     "rest_framework_simplejwt",
     "django_filters",
-    "drf_yasg",
 ]
 
 # Custom Apps
@@ -53,7 +55,6 @@ PROJECT_APPS = [
     "api.apps.ApiConfig",
     "accounts.apps.AccountsConfig",
     "authentication.apps.AuthenticationConfig",
-    "docs.apps.DocsConfig",
 ]
 
 # Combine all apps
@@ -127,16 +128,6 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
 }
 
-SWAGGER_SETTINGS = {
-    "SECURITY_DEFINITIONS": {
-        "Bearer": {
-            "type": "apiKey",
-            "name": "Authorization",
-            "in": "header",
-        },
-    },
-}
-
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
@@ -169,6 +160,7 @@ DATABASES = {
         "PASSWORD": config("DATABASE_PASSWORD"),
     }
 }
+
 
 # E-mail configuration
 # -----------------------------------
