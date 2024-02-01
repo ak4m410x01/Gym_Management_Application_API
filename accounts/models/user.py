@@ -1,8 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
-from django.contrib.auth.models import Group, Permission
-
-from accounts.models.usermanager import UserManager
+from django.contrib.auth.models import AbstractUser
 
 from accounts.validators.phone_number import phoneNumberEgyptValidator
 from accounts.validators.whatsappLink import whastappLinkEgyptValidator
@@ -23,7 +20,7 @@ class Contact(models.Model):
         return str(self.phone)
 
 
-class User(AbstractBaseUser, PermissionsMixin):
+class User(AbstractUser):
     GENDER = (('m','male'), ('f','female'))
     
     email = models.EmailField(max_length=255, unique=True)
@@ -38,35 +35,13 @@ class User(AbstractBaseUser, PermissionsMixin):
     city = models.CharField(max_length=30, blank=True, null=True)
     address = models.CharField(max_length=100, blank=True, null=True)
 
-    is_active = models.BooleanField(default=True)
     is_verified = models.BooleanField(default=False)
-
     last_login = models.DateTimeField(blank=True, null=True)
-    joined_at = models.DateTimeField(auto_now_add=True)
-
     contact = models.OneToOneField(Contact, on_delete=models.CASCADE, unique=True, null=True, blank=True)
 
     USERNAME_FIELD = "username"
     REQUIRED_FIELDS = ["email", "password", "first_name", "last_name", "gender", "date_of_birth"]
-
-    objects = UserManager()
-
-    groups = models.ManyToManyField(
-        Group,
-        verbose_name="groups",
-        blank=True,
-        related_name="account_user_set",
-        related_query_name="user",
-    )
-
-    user_permissions = models.ManyToManyField(
-        Permission,
-        verbose_name="user permissions",
-        blank=True,
-        related_name="account_user_set",
-        related_query_name="user",
-    )
-
+    
     class Meta:
         swappable = "AUTH_USER_MODEL"
 
