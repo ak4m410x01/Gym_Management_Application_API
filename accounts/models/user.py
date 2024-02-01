@@ -11,9 +11,6 @@ from accounts.validators.facebookLink import facebookLinkValidator
 from accounts.validators.instagramLink import instagramLinkValidator
 from accounts.validators.twitterLink import twitterLinkValidator
 
-from accounts.validators.gender import genderValidator
-from accounts.validators.date_of_birth import dateOfBirthValidator
-
 class Contact(models.Model):
     phone = models.CharField(max_length=13, blank=True, null=True, validators=[phoneNumberEgyptValidator])
     whatsapp = models.CharField(max_length=50, blank=True, null=True, validators=[whastappLinkEgyptValidator])
@@ -27,14 +24,16 @@ class Contact(models.Model):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
+    GENDER = (('m','male'), ('f','female'))
+    
     email = models.EmailField(max_length=255, unique=True)
     username = models.CharField(max_length=255, unique=True)
     password = models.CharField(max_length=5000)
 
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
-    gender = models.CharField(max_length=1, validators=[genderValidator])
-    date_of_birth = models.DateField(validators=[dateOfBirthValidator])
+    gender = models.CharField(max_length=1, choices=GENDER)
+    date_of_birth = models.DateField()
 
     city = models.CharField(max_length=30, blank=True, null=True)
     address = models.CharField(max_length=100, blank=True, null=True)
@@ -45,10 +44,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     last_login = models.DateTimeField(blank=True, null=True)
     joined_at = models.DateTimeField(auto_now_add=True)
 
-    contact = models.OneToOneField(Contact, on_delete=models.CASCADE, unique=True)
+    contact = models.OneToOneField(Contact, on_delete=models.CASCADE, unique=True, null=True, blank=True)
 
     USERNAME_FIELD = "username"
-    REQUIRED_FIELDS = ["email"]
+    REQUIRED_FIELDS = ["email", "password", "first_name", "last_name", "gender", "date_of_birth"]
 
     objects = UserManager()
 
