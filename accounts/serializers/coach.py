@@ -27,10 +27,12 @@ class BaseCoachSerializer(serializers.ModelSerializer):
     twitter = serializers.CharField(source="user.contact.twitter", required=False)
 
     is_active = serializers.BooleanField(source="user.is_active", required=False, read_only=True)
-    is_verified = serializers.BooleanField(source="user.is_active", required=False, read_only=True)
+    is_staff = serializers.BooleanField(source="user.is_staff", required=False, read_only=True)
+    is_superuser = serializers.BooleanField(source="user.is_superuser", required=False, read_only=True)
+    is_verified = serializers.BooleanField(source="user.is_verified", required=False, read_only=True)
 
     last_login = serializers.DateTimeField(source="user.last_login", required=False, read_only=True)
-    joined_at = serializers.DateTimeField(source="user.joined_at", required=False, read_only=True)
+    date_joined = serializers.DateTimeField(source="user.joined_at", required=False, read_only=True)
 
     class Meta:
         model = Coach
@@ -54,9 +56,11 @@ class BaseCoachSerializer(serializers.ModelSerializer):
             "instagram",
             "twitter",
             "is_active",
+            "is_staff",
+            "is_superuser",
             "is_verified",
             "last_login",
-            "joined_at",
+            "date_joined",
         ]
 
 

@@ -42,9 +42,11 @@ class UserSerializer(serializers.ModelSerializer):
             "instagram",
             "twitter",
             "is_active",
+            "is_staff",
+            "is_superuser",
             "is_verified",
             "last_login",
-            "joined_at",
+            "date_joined",
         ]
 
     def get_role(self, obj):
