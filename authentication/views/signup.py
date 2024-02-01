@@ -22,16 +22,16 @@ class SignUp(APIView):
 
             # Generate Email Components
             token = RefreshToken.for_user(visitor)
-            token["username"] = visitor.account.username
+            token["username"] = visitor.user.username
 
             if "user_id" in token:
                 del token["user_id"]
 
             verify_url = f"{'https' if request.is_secure() else 'http'}://{request.get_host()}{reverse('verifyemail')}?token={token}"
             email = {
-                "to": visitor.account.email,
+                "to": visitor.user.email,
                 "subject": "GYM Sign Up Verification",
-                "body": f"Dear, {visitor.account.username}... !!\n\n\nUse the link below to verify your email: \n\n{verify_url}",
+                "body": f"Dear, {visitor.user.username}... !!\n\n\nUse the link below to verify your email: \n\n{verify_url}",
             }
 
             # Send Email

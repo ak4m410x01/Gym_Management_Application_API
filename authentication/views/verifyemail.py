@@ -8,7 +8,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework import status
 
-from accounts.models.visitor import Account
+from accounts.models.user import User
 from authentication.serializers.token import EmailVerificationSerializer
 
 
@@ -30,7 +30,7 @@ class VerifyEmail(GenericAPIView):
             )
             username = payload.get("username")
 
-            account = Account.objects.filter(username=username).first()
+            account = User.objects.filter(username=username).first()
 
             if not account:
                 response["error"] = "User does not exist."

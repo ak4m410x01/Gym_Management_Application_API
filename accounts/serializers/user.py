@@ -1,6 +1,6 @@
 from rest_framework import serializers
-from accounts.models.account import Account, Contact
 
+from accounts.models.user import User, Contact
 
 class ContactSerializer(serializers.ModelSerializer):
     class Meta:
@@ -9,7 +9,7 @@ class ContactSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class AccountSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     phone = serializers.CharField(source="contact.phone")
     whatsapp = serializers.CharField(source="contact.whatsapp")
     telegram = serializers.CharField(source="contact.telegram")
@@ -21,7 +21,7 @@ class AccountSerializer(serializers.ModelSerializer):
     role_id = serializers.SerializerMethodField()
 
     class Meta:
-        model = Account
+        model = User
         fields = [
             "id",
             "role",

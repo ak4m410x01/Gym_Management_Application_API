@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 
 
-from accounts.models.account import Account
+from accounts.models.user import User
 
 
 class SignInSerializer(serializers.Serializer):

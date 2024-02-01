@@ -1,7 +1,7 @@
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from django_filters.rest_framework import DjangoFilterBackend
 
-from accounts.models.account import Account, Contact
+from accounts.models.user import User, Contact
 from accounts.models.member import Member
 from accounts.serializers.member import MemberSerializer
 from accounts.filters.member import MemberFilter
@@ -19,10 +19,10 @@ class MemberRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
     filterset_class = MemberFilter
 
     def perform_destroy(self, instance):
-        account = Account.objects.get(id=instance.account.id)
-        contact = Contact.objects.get(id=account.contact.id)
+        user = User.objects.get(id=instance.user.id)
+        contact = Contact.objects.get(id=user.contact.id)
 
         contact.delete()
-        account.delete()
+        user.delete()
 
         return super().perform_destroy(instance)

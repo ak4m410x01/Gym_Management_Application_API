@@ -1,8 +1,8 @@
 import django_filters
-from accounts.models.account import Account
+from accounts.models.user import User
 
 
-class AccountFilter(django_filters.FilterSet):
+class UserFilter(django_filters.FilterSet):
     role = django_filters.CharFilter(method="filter_by_role")
     username = django_filters.CharFilter(lookup_expr="icontains")
     email = django_filters.CharFilter(lookup_expr="icontains")
@@ -10,7 +10,7 @@ class AccountFilter(django_filters.FilterSet):
     last_name = django_filters.CharFilter(lookup_expr="icontains")
 
     class Meta:
-        model = Account
+        model = User
         fields = ["role", "username", "email", "first_name", "last_name"]
 
     def filter_by_role(self, queryset, name, value):

@@ -2,109 +2,35 @@ from re import match
 from rest_framework import serializers
 
 from accounts.models.coach import Coach, Salary
-from accounts.models.account import Account, Contact
+from accounts.models.user import User, Contact
 
 
 class BaseCoachSerializer(serializers.ModelSerializer):
-    email = serializers.EmailField(
-        source="account.email",
-    )
+    email = serializers.EmailField(source="user.email")
+    username = serializers.CharField(source="user.username")
+    password = serializers.CharField(source="user.password", write_only=True)
 
-    username = serializers.CharField(
-        source="account.username",
-    )
+    first_name = serializers.CharField(source="user.first_name")
+    last_name = serializers.CharField(source="user.last_name")
+    gender = serializers.CharField(source="user.gender")
+    date_of_birth = serializers.DateField(source="user.date_of_birth")
 
-    password = serializers.CharField(
-        source="account.password",
-        write_only=True,
-    )
+    city = serializers.CharField(source="user.city", required=False)
+    address = serializers.CharField(source="user.address", required=False)
+    salary = serializers.CharField(source="salary.salary", required=False, read_only=True)
 
-    first_name = serializers.CharField(
-        source="account.first_name",
-    )
+    phone = serializers.CharField(source="user.contact.phone", required=False)
+    whatsapp = serializers.CharField(source="user.contact.whatsapp", required=False)
+    telegram = serializers.CharField(source="user.contact.telegram", required=False)
+    facebook = serializers.CharField(source="user.contact.facebook", required=False)
+    instagram = serializers.CharField(source="user.contact.instagram", required=False)
+    twitter = serializers.CharField(source="user.contact.twitter", required=False)
 
-    last_name = serializers.CharField(
-        source="account.last_name",
-    )
+    is_active = serializers.BooleanField(source="user.is_active", required=False, read_only=True)
+    is_verified = serializers.BooleanField(source="user.is_active", required=False, read_only=True)
 
-    gender = serializers.CharField(
-        source="account.gender",
-    )
-
-    date_of_birth = serializers.DateField(
-        source="account.date_of_birth",
-    )
-
-    city = serializers.CharField(
-        source="account.city",
-        required=False,
-    )
-
-    address = serializers.CharField(
-        source="account.address",
-        required=False,
-    )
-    
-    salary = serializers.CharField(
-        source="salary.salary",
-        required=False,
-        read_only=True,
-    )
-    
-    phone = serializers.CharField(
-        source="account.contact.phone",
-        required=False,
-    )
-
-    whatsapp = serializers.CharField(
-        source="account.contact.whatsapp",
-        required=False,
-    )
-
-    telegram = serializers.CharField(
-        source="account.contact.telegram",
-        required=False,
-    )
-
-    facebook = serializers.CharField(
-        source="account.contact.facebook",
-        required=False,
-    )
-
-    instagram = serializers.CharField(
-        source="account.contact.instagram",
-        required=False,
-    )
-
-    twitter = serializers.CharField(
-        source="account.contact.twitter",
-        required=False,
-    )
-    
-    is_active = serializers.BooleanField(
-        source="account.is_active",
-        required=False,
-        read_only=True,
-    )
-    
-    is_verified = serializers.BooleanField(
-        source="account.is_active",
-        required=False,
-        read_only=True,
-    )
-
-
-    last_login = serializers.DateTimeField(
-        source="account.last_login",
-        required=False,
-        read_only=True,
-    )
-
-    joined_at = serializers.DateTimeField(
-        source="account.joined_at",
-        required=False,
-        read_only=True,
-    )
+    last_login = serializers.DateTimeField(source="user.last_login", required=False, read_only=True)
+    joined_at = serializers.DateTimeField(source="user.joined_at", required=False, read_only=True)
 
     class Meta:
         model = Coach
@@ -150,12 +76,12 @@ class CoachSerializer(BaseCoachSerializer):
                 self.fields[field_name].required = False
 
     def validate_username(self, username: str) -> str:
-        if Account.objects.filter(username=username).exists():
+        if User.objects.filter(username=username).exists():
             raise serializers.ValidationError(f"username already exists.")
         return username
 
     def validate_email(self, email: str) -> str:
-        if Account.objects.filter(email=email).exists():
+        if User.objects.filter(email=email).exists():
             raise serializers.ValidationError(f"email already exists.")
         return email
 
@@ -166,12 +92,12 @@ class CoachSerializer(BaseCoachSerializer):
         return gender
 
     def create(self, validated_data):
-        account_data = validated_data.pop("account", {})
-        contact_data = account_data.pop("contact", {})
+        user_data = validated_data.pop("user", {})
+        contact_data = user_data.pop("contact", {})
 
         contact = Contact.objects.create(**contact_data)
-        account = Account.objects.create(contact=contact, **account_data)
-        coach = Coach.objects.create(account=account, **validated_data)
+        user = User.objects.create(contact=contact, **user_data)
+        coach = Coach.objects.create(user=user, **validated_data)
 
         return coach
 
@@ -179,14 +105,14 @@ class CoachSerializer(BaseCoachSerializer):
         # Contact Model
         contact_data = validated_data.pop("contact", {})
         for key, value in contact_data.items():
-            setattr(instance.account.contact, key, value)
-        instance.account.contact.save()
+            setattr(instance.user.contact, key, value)
+        instance.user.contact.save()
 
-        # Account Model
-        account_data = validated_data.pop("account", {})
-        for key, value in account_data.items():
-            setattr(instance.account, key, value)
-        instance.account.save()
+        # user Model
+        user_data = validated_data.pop("user", {})
+        for key, value in user_data.items():
+            setattr(instance.user, key, value)
+        instance.user.save()
 
         # Coach Model
         for key, value in validated_data.items():

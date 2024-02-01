@@ -1,13 +1,10 @@
 from django.db import models
-from accounts.models.account import Account
+
+from accounts.models.user import User
 
 
 class Admin(models.Model):
-    account = models.OneToOneField(
-        Account,
-        on_delete=models.CASCADE,
-        unique=True,
-    )
+    user = models.OneToOneField(User, on_delete=models.CASCADE, unique=True)
 
     def __str__(self) -> str:
-        return str(self.account.username)
+        return str(self.user.username)

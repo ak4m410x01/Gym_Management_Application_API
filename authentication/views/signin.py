@@ -6,7 +6,7 @@ from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import AllowAny
 
-from accounts.models.account import Account
+from accounts.models.user import User
 from accounts.models.admin import Admin
 from accounts.models.coach import Coach
 from accounts.models.member import Member
@@ -17,11 +17,10 @@ from authentication.serializers.signin import SignInSerializer
 class SignIn(APIView):
     permission_classes = (AllowAny,)
 
-    def is_authenticated(self, username: str, password: str) -> Account:
-        account = Account.objects.filter(username=username, password=password).first()
-        return account
+    def is_authenticated(self, username: str, password: str) -> User:
+        return User.objects.filter(username=username, password=password).first()
 
-    def get_account(self, account: Account) -> Dict:
+    def get_user(self, user: User) -> Dict:
         response = {"account": None, "role": None}
         models = (
             (Admin, "admin"),
@@ -31,7 +30,7 @@ class SignIn(APIView):
         )
         for model, role in models:
             try:
-                response["account"] = getattr(account, model.__name__.lower())
+                response["user"] = getattr(user, model.__name__.lower())
                 response["role"] = role
                 break
             except model.DoesNotExist:
@@ -44,23 +43,23 @@ class SignIn(APIView):
             username = serializer.data.get("username")
             password = serializer.data.get("password")
 
-            account = self.is_authenticated(username, password)
+            user = self.is_authenticated(username, password)
 
             response = {}
-            if not account:
+            if not user:
                 response["error"] = "Invalid credentials."
                 return Response(response, status=status.HTTP_401_UNAUTHORIZED)
-            if not account.is_active:
+            if not user.is_active:
                 response["error"] = "Account inactive."
                 return Response(response, status=status.HTTP_401_UNAUTHORIZED)
-            if not account.is_verified:
+            if not user.is_verified:
                 response["error"] = "Account not verified."
                 return Response(response, status=status.HTTP_401_UNAUTHORIZED)
 
-            account = self.get_account(account)
-            token = RefreshToken.for_user(account.get("account"))
+            user = self.get_user(user)
+            token = RefreshToken.for_user(user.get("user"))
             token["username"] = username
-            token["role"] = account.get("role")
+            token["role"] = user.get("role")
             response["refresh_token"] = str(token)
             response["access_token"] = str(token.access_token)
             return Response(response, status=status.HTTP_200_OK)
