@@ -26,23 +26,26 @@ class VerifyEmail(GenericAPIView):
 
         try:
             payload = jwt.decode(
-                jwt=token, key=config("SECRET_KEY"), algorithms=["HS256"]
+                jwt=token,
+                key=config("SECRET_KEY"),
+                algorithms=["HS256"],
             )
+
             username = payload.get("username")
 
-            account = User.objects.filter(username=username).first()
+            user = User.objects.filter(username=username).first()
 
-            if not account:
+            if not user:
                 response["error"] = "User does not exist."
                 return Response(response, status=status.HTTP_404_NOT_FOUND)
 
-            if account.is_verified:
+            if user.is_verified:
                 response["email"] = "Email already verified."
                 return Response(response, status=status.HTTP_200_OK)
 
-            account.is_verified = True
-            account.save()
-            signin_url = f"{'https' if request.is_secure() else 'http'}://{request.get_host()}{reverse('signin')}"
+            user.is_verified = True
+            user.save()
+            signin_url = f"{'https' if request.is_secure() else 'http'}://{request.get_host()}signin/"
             response["email"] = "Verification is successful."
             response["signin"] = f"Signin now {signin_url}"
 

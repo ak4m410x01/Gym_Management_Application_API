@@ -21,7 +21,7 @@ class SignIn(APIView):
         return User.objects.filter(username=username, password=password).first()
 
     def get_user(self, user: User) -> Dict:
-        response = {"account": None, "role": None}
+        response = {"user": None, "role": None}
         models = (
             (Admin, "admin"),
             (Coach, "coach"),

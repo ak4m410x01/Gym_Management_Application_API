@@ -1,10 +1,6 @@
 from rest_framework import serializers
 
 
-
-from accounts.models.user import User
-
-
 class SignInSerializer(serializers.Serializer):
     username = serializers.CharField(required=True, allow_blank=False)
     password = serializers.CharField(required=True, allow_blank=False)
@@ -17,5 +13,5 @@ class SignInSerializer(serializers.Serializer):
             raise serializers.ValidationError("Username is required.")
         if not password:
             raise serializers.ValidationError("Password is required.")
-        
+
         return data

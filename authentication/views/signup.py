@@ -8,7 +8,6 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
 
-
 from authentication.serializers.signup import SignUpSerializer
 
 
@@ -27,7 +26,7 @@ class SignUp(APIView):
             if "user_id" in token:
                 del token["user_id"]
 
-            verify_url = f"{'https' if request.is_secure() else 'http'}://{request.get_host()}{reverse('verifyemail')}?token={token}"
+            verify_url = f"{'https' if request.is_secure() else 'http'}://{request.get_host()}signup/verify/?token={token}"
             email = {
                 "to": visitor.user.email,
                 "subject": "GYM Sign Up Verification",
@@ -43,7 +42,7 @@ class SignUp(APIView):
             )
 
             response = {
-                "detail": f"Thank you for signing up :) Verify Your Email Address !!"
+                "detail": f"Thank you for signing up :) Verify Your Email Address !!",
             }
             return Response(response, status=status.HTTP_201_CREATED)
 
