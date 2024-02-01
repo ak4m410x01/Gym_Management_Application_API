@@ -46,24 +46,34 @@ class ObtainPairTokenView(APIView):
 
             user = self.is_authenticated(username, password)
 
-            response = {}
             if not user:
-                response["error"] = "Invalid credentials."
-                return Response(response, status=status.HTTP_401_UNAUTHORIZED)
+                return Response(
+                    {"error": "Invalid credentials."},
+                    status=status.HTTP_401_UNAUTHORIZED,
+                )
             if not user.is_active:
-                response["error"] = "Account inactive."
-                return Response(response, status=status.HTTP_401_UNAUTHORIZED)
+                return Response(
+                    {"error": "Account inactive."}, status=status.HTTP_401_UNAUTHORIZED
+                )
             if not user.is_verified:
-                response["error"] = "Account not verified."
-                return Response(response, status=status.HTTP_401_UNAUTHORIZED)
+                return Response(
+                    {"error": "Account not verified."},
+                    status=status.HTTP_401_UNAUTHORIZED,
+                )
 
             user = self.get_user(user)
             token = RefreshToken.for_user(user.get("user"))
             token["username"] = username
             token["role"] = user.get("role")
-            response["refresh_token"] = str(token)
-            response["access_token"] = str(token.access_token)
 
-            return Response(response, status=status.HTTP_200_OK)
+            return Response(
+                {
+                    "access": f"{token.access_token}",
+                    "refresh": f"{token}",
+                },
+                status=status.HTTP_200_OK,
+            )
 
-        return Response({"detail": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
+        return Response(
+            {"detail": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED
+        )
