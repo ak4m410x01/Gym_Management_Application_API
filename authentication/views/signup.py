@@ -1,6 +1,5 @@
 from django.conf.global_settings import EMAIL_HOST_USER
 from django.core.mail import send_mail
-from django.urls import reverse
 
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import AllowAny
@@ -20,13 +19,10 @@ class SignUp(APIView):
             visitor = serializer.save()
 
             # Generate Email Components
-            token = RefreshToken.for_user(visitor)
-            token["username"] = visitor.user.username
+            token = RefreshToken.for_user(visitor.user)
+            token["role"] = "visitor"
 
-            if "user_id" in token:
-                del token["user_id"]
-
-            verify_url = f"{'https' if request.is_secure() else 'http'}://{request.get_host()}signup/verify/?token={token}"
+            verify_url = f"{'https' if request.is_secure() else 'http'}://{request.get_host()}/api/auth/signup/verify/?token={token}"
             email = {
                 "to": visitor.user.email,
                 "subject": "GYM Sign Up Verification",
