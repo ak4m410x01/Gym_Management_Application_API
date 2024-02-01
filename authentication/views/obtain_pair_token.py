@@ -1,4 +1,5 @@
 from typing import Dict
+
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -6,12 +7,12 @@ from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import AllowAny
 
+from authentication.serializers.obtain_pair_token import ObtainPairTokenSerializer
 from accounts.models.user import User
 from accounts.models.admin import Admin
 from accounts.models.coach import Coach
 from accounts.models.member import Member
 from accounts.models.visitor import Visitor
-from authentication.serializers.obtain_pair_token import SignInSerializer
 
 
 class ObtainPairTokenView(APIView):
@@ -30,7 +31,7 @@ class ObtainPairTokenView(APIView):
         )
         for model, role in models:
             try:
-                response["user"] = getattr(user, model.__name__.lower())
+                response["user"] = getattr(user, model.__name__.lower()).user
                 response["role"] = role
                 break
             except model.DoesNotExist:
@@ -38,7 +39,7 @@ class ObtainPairTokenView(APIView):
         return response
 
     def post(self, request) -> Response:
-        serializer = SignInSerializer(data=request.data)
+        serializer = ObtainPairTokenSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             username = serializer.data.get("username")
             password = serializer.data.get("password")
@@ -62,9 +63,7 @@ class ObtainPairTokenView(APIView):
             token["role"] = user.get("role")
             response["refresh_token"] = str(token)
             response["access_token"] = str(token.access_token)
+
             return Response(response, status=status.HTTP_200_OK)
 
-        return Response(
-            {"detail": "Invalid credentials"},
-            status=status.HTTP_401_UNAUTHORIZED,
-        )
+        return Response({"detail": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
