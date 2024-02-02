@@ -1,25 +1,36 @@
-from rest_framework.generics import ListAPIView, RetrieveUpdateDestroyAPIView
-from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.permissions import IsAuthenticated
 
-from accounts.models.visitor import Visitor
+from django_filters.rest_framework import DjangoFilterBackend
+
 from accounts.models.user import User, Contact
+from accounts.models.visitor import Visitor
 from accounts.serializers.visitor import VisitorSerializer
 from accounts.filters.visitor import VisitorFilter
+
+from accounts.permissions.isDeveloper import IsDeveloper
 from accounts.permissions.isVisitor import IsVisitor
+from accounts.permissions.isAdmin import IsAdmin
 
 
-class VisitorList(ListAPIView):
+class VisitorListCreate(ListCreateAPIView):
     queryset = Visitor.objects.all()
     serializer_class = VisitorSerializer
     filter_backends = (DjangoFilterBackend,)
     filterset_class = VisitorFilter
 
+    def get_permissions(self):
+        if self.request.method == "GET":
+            return (IsDeveloper(), IsAuthenticated())
+        elif self.request.method == "POST":
+            return (IsDeveloper(),)
+        else:
+            return ()
+
 
 class VisitorRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
     queryset = Visitor.objects.all()
     serializer_class = VisitorSerializer
-    permission_classes = (IsVisitor,)
 
     def perform_destroy(self, instance):
         user = User.objects.get(id=instance.user.id)
@@ -32,5 +43,10 @@ class VisitorRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
 
     def get_permissions(self):
         if self.request.method == "GET":
-            return (IsAuthenticated,)
-        return super().get_permissions()
+            return (IsDeveloper(), IsAuthenticated())
+        elif self.request.method == "PUT":
+            return (IsDeveloper(), IsAuthenticated(), IsVisitor())
+        elif self.request.method == "DELETE":
+            return (IsDeveloper(), IsAuthenticated(), IsAdmin(), IsVisitor())
+        else:
+            return ()
