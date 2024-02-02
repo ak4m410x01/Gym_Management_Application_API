@@ -1,9 +1,14 @@
-from rest_framework.generics import RetrieveUpdateDestroyAPIView
+from rest_framework.generics import ListAPIView, RetrieveUpdateDestroyAPIView
 
 from accounts.models.visitor import Visitor
 from accounts.models.user import User, Contact
 from accounts.serializers.visitor import VisitorSerializer
 from accounts.permissions.isVisitor import IsVisitor
+
+
+class VisitorList(ListAPIView):
+    queryset = Visitor.objects.all()
+    serializer_class = VisitorSerializer
 
 
 class VisitorRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
