@@ -31,3 +31,8 @@ class CoachMemberRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
         user.delete()
 
         return super().perform_destroy(instance)
+
+    def get_permissions(self):
+        if self.request.method == "DELETE":
+            return (IsAdmin,)
+        return super().get_permissions()
