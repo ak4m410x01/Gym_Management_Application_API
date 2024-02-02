@@ -18,25 +18,39 @@ from accounts.models.visitor import Visitor
 class ObtainPairTokenView(APIView):
     permission_classes = (AllowAny,)
 
-    def is_authenticated(self, username: str, password: str) -> User:
+    def isAuthenticated(self, username: str, password: str) -> User:
         return User.objects.filter(username=username, password=password).first()
 
     def get_user(self, user: User) -> Dict:
-        response = {"user": None, "role": None}
-        models = (
+        response = {"user_id": None, "user_obj": None, "user_role": None}
+        USER_MODELS = (
             (Admin, "admin"),
             (Coach, "coach"),
             (Member, "member"),
             (Visitor, "visitor"),
         )
-        for model, role in models:
+
+        for model, role in USER_MODELS:
             try:
-                response["user"] = getattr(user, model.__name__.lower()).user
-                response["role"] = role
+                user = getattr(user, model.__name__.lower())
+
+                response["user_id"] = user.id
+                response["user_obj"] = user.user
+                response["user_role"] = role
                 break
+
             except model.DoesNotExist:
                 pass
+
         return response
+
+    def obtain_token(self, user: Dict):
+        token = RefreshToken.for_user(user.get("user_obj"))
+
+        token["user_id"] = user.get("user_id")
+        token["user_role"] = user.get("user_role")
+
+        return token
 
     def post(self, request) -> Response:
         serializer = ObtainPairTokenSerializer(data=request.data)
@@ -44,7 +58,7 @@ class ObtainPairTokenView(APIView):
             username = serializer.data.get("username")
             password = serializer.data.get("password")
 
-            user = self.is_authenticated(username, password)
+            user = self.isAuthenticated(username, password)
 
             if not user:
                 return Response(
@@ -53,7 +67,8 @@ class ObtainPairTokenView(APIView):
                 )
             if not user.is_active:
                 return Response(
-                    {"error": "Account inactive."}, status=status.HTTP_401_UNAUTHORIZED
+                    {"error": "Account inactive."},
+                    status=status.HTTP_401_UNAUTHORIZED,
                 )
             if not user.is_verified:
                 return Response(
@@ -61,10 +76,7 @@ class ObtainPairTokenView(APIView):
                     status=status.HTTP_401_UNAUTHORIZED,
                 )
 
-            user = self.get_user(user)
-            token = RefreshToken.for_user(user.get("user"))
-            token["username"] = username
-            token["role"] = user.get("role")
+            token = self.obtain_token(self.get_user(user))
 
             return Response(
                 {
