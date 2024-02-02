@@ -83,30 +83,20 @@ class UserSerializer(serializers.ModelSerializer):
             return None
 
         role = self.get_role(obj)
+        view_name = ""
         if role == "admin":
-            return reverse(
-                "api:accounts:AdminRetrieveUpdateDestroy",
-                kwargs={"pk": obj.pk},
-                request=request,
-            )
+            view_name = "api:accounts:AdminRetrieveUpdateDestroy"
         elif role == "coach":
-            return reverse(
-                "api:accounts:CoachRetrieveUpdateDestroy",
-                kwargs={"pk": obj.pk},
-                request=request,
-            )
+            view_name = "api:accounts:CoachRetrieveUpdateDestroy"
         elif role == "member":
-            return reverse(
-                "api:accounts:MemberRetrieveUpdateDestroy",
-                kwargs={"pk": obj.pk},
-                request=request,
-            )
+            view_name = "api:accounts:MemberRetrieveUpdateDestroy"
         elif role == "visitor":
-            return reverse(
-                "api:accounts:VisitorRetrieveUpdateDestroy",
-                kwargs={"pk": obj.pk},
-                request=request,
-            )
-
+            view_name = "api:accounts:VisitorRetrieveUpdateDestroy"
         else:
             return None
+
+        return reverse(
+            view_name,
+            kwargs={"pk": obj.pk},
+            request=request,
+        )
