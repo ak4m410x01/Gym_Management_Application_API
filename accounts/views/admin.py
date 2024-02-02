@@ -20,9 +20,9 @@ class AdminListCreate(ListCreateAPIView):
 
     def get_permissions(self):
         if self.request.method == "GET":
-            return (IsDeveloper(), IsAuthenticated())
+            return (IsDeveloper() or IsAuthenticated(),)
         elif self.request.method == "POST":
-            return (IsDeveloper(), IsAuthenticated(), IsAdmin())
+            return (IsDeveloper() or IsAuthenticated() or IsAdmin(),)
         else:
             return ()
 
@@ -43,10 +43,10 @@ class AdminRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
 
     def get_permissions(self):
         if self.request.method == "GET":
-            return (IsDeveloper(), IsAuthenticated())
+            return (IsDeveloper() or IsAuthenticated(),)
         elif self.request.method == "PUT":
-            return (IsDeveloper(), IsAuthenticated(), IsAdmin())
+            return (IsDeveloper() or IsAuthenticated() or IsAdmin(),)
         elif self.request.method == "DELETE":
-            return (IsDeveloper(), IsAuthenticated(), IsAdmin())
+            return (IsDeveloper() or IsAuthenticated() or IsAdmin(),)
         else:
             return ()

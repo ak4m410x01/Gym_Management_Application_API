@@ -21,7 +21,7 @@ class MemberListCreate(ListCreateAPIView):
 
     def get_permissions(self):
         if self.request.method == "GET":
-            return (IsDeveloper(), IsAuthenticated())
+            return (IsDeveloper() or IsAuthenticated(),)
         elif self.request.method == "POST":
             return (IsDeveloper(),)
         else:
@@ -43,10 +43,10 @@ class MemberRetrieveUpdate(RetrieveUpdateAPIView):
 
     def get_permissions(self):
         if self.request.method == "GET":
-            return (IsDeveloper(), IsAuthenticated())
+            return (IsDeveloper() or IsAuthenticated(),)
         elif self.request.method == "PUT":
-            return (IsDeveloper(), IsAuthenticated(), IsMember())
+            return (IsDeveloper() or IsAuthenticated() or IsMember(),)
         elif self.request.method == "DELETE":
-            return (IsDeveloper(), IsAuthenticated(), IsAdmin(), IsMember())
+            return (IsDeveloper() or IsAuthenticated() or IsAdmin() or IsMember(),)
         else:
             return ()

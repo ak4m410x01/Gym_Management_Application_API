@@ -22,9 +22,9 @@ class CoachListCreate(ListCreateAPIView):
 
     def get_permissions(self):
         if self.request.method == "GET":
-            return (IsDeveloper(), IsAuthenticated())
+            return (IsDeveloper() or IsAuthenticated(),)
         elif self.request.method == "POST":
-            return (IsDeveloper(), IsAuthenticated(), IsAdmin())
+            return (IsDeveloper() or IsAuthenticated() or IsAdmin(),)
         else:
             return ()
 
@@ -45,10 +45,10 @@ class CoachMemberRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
 
     def get_permissions(self):
         if self.request.method == "GET":
-            return (IsDeveloper(), IsAuthenticated())
+            return (IsDeveloper() or IsAuthenticated(),)
         elif self.request.method == "PUT":
-            return (IsDeveloper(), IsAuthenticated(), IsCoach())
+            return (IsDeveloper() or IsAuthenticated() or IsCoach(),)
         elif self.request.method == "DELETE":
-            return (IsDeveloper(), IsAuthenticated(), IsAdmin())
+            return (IsDeveloper() or IsAuthenticated() or IsAdmin(),)
         else:
             return ()
