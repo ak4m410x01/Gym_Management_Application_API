@@ -1,4 +1,5 @@
 from rest_framework.generics import ListAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.permissions import IsAuthenticated
 
 from accounts.models.visitor import Visitor
 from accounts.models.user import User, Contact
@@ -24,3 +25,8 @@ class VisitorRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
         user.delete()
 
         return super().perform_destroy(instance)
+
+    def get_permissions(self):
+        if self.request.method == "GET":
+            return (IsAuthenticated,)
+        return super().get_permissions()
