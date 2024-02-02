@@ -4,5 +4,5 @@ from accounts.views.visitor import VisitorListCreate, VisitorRetrieveUpdateDestr
 
 urlpatterns = [
     path("", VisitorListCreate.as_view()),
-    path("<int:pk>/", VisitorRetrieveUpdateDestroy.as_view()),
+    path("<int:pk>/", VisitorRetrieveUpdateDestroy.as_view(), name="VisitorRetrieveUpdateDestroy"),
 ]

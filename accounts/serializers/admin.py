@@ -44,11 +44,15 @@ class BaseAdminSerializer(serializers.ModelSerializer):
     date_joined = serializers.DateTimeField(
         source="user.date_joined", required=False, read_only=True
     )
+    url = serializers.HyperlinkedIdentityField(
+        view_name="api:accounts:AdminRetrieveUpdateDestroy", lookup_field="pk"
+    )
 
     class Meta:
         model = Admin
         ordering = (id,)
         fields = [
+            "url",
             "id",
             "email",
             "username",

@@ -1,8 +1,12 @@
 from django.urls import path
 
-from accounts.views.member import MemberListCreate, MemberRetrieveUpdate
+from accounts.views.member import MemberListCreate, MemberRetrieveUpdateDestroy
 
 urlpatterns = [
-    path("", MemberListCreate.as_view()),
-    path("<int:pk>/", MemberRetrieveUpdate.as_view()),
+    path("", MemberListCreate.as_view(), name="MemberListCreate"),
+    path(
+        "<int:pk>/",
+        MemberRetrieveUpdateDestroy.as_view(),
+        name="MemberRetrieveUpdateDestroy",
+    ),
 ]

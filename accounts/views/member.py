@@ -1,4 +1,4 @@
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.permissions import IsAuthenticated
 
 from django_filters.rest_framework import DjangoFilterBackend
@@ -28,7 +28,7 @@ class MemberListCreate(ListCreateAPIView):
             return ()
 
 
-class MemberRetrieveUpdate(RetrieveUpdateAPIView):
+class MemberRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
     queryset = Member.objects.all()
     serializer_class = MemberSerializer
 

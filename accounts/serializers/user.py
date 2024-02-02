@@ -1,6 +1,8 @@
 from rest_framework import serializers
+from rest_framework.reverse import reverse
 
 from accounts.models.user import User, Contact
+
 
 class ContactSerializer(serializers.ModelSerializer):
     class Meta:
@@ -19,10 +21,12 @@ class UserSerializer(serializers.ModelSerializer):
 
     role = serializers.SerializerMethodField()
     role_id = serializers.SerializerMethodField()
+    url = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = User
         fields = [
+            "url",
             "id",
             "role",
             "role_id",
@@ -72,3 +76,64 @@ class UserSerializer(serializers.ModelSerializer):
             return obj.visitor.id
         else:
             return None
+
+    def get_url(self, obj):
+        request = self.context.get("request")
+        if not request:
+            return None
+
+        role = self.get_role(obj)
+        if role == "admin":
+            return reverse(
+                "api:accounts:AdminRetrieveUpdateDestroy",
+                kwargs={"pk": obj.pk},
+                request=request,
+            )
+        elif role == "coach":
+            return reverse(
+                "api:accounts:CoachRetrieveUpdateDestroy",
+                kwargs={"pk": obj.pk},
+                request=request,
+            )
+        elif role == "member":
+            return reverse(
+                "api:accounts:MemberRetrieveUpdateDestroy",
+                kwargs={"pk": obj.pk},
+                request=request,
+            )
+        elif role == "visitor":
+            return reverse(
+                "api:accounts:VisitorRetrieveUpdateDestroy",
+                kwargs={"pk": obj.pk},
+                request=request,
+            )
+
+        else:
+            return None
+
+    # def to_representation(self, instance):
+    #     representation = super().to_representation(instance)
+    #     role = self.get_role(instance)
+    #     if role == "admin":
+    #         representation["url"] = reverse(
+    #             "api:accounts:AdminRetrieveUpdateDestroy",
+    #             kwargs={"pk": instance.pk},
+    #         )
+    #     elif role == "coach":
+    #         representation["url"] = reverse(
+    #             "api:accounts:CoachRetrieveUpdateDestroy",
+    #             kwargs={"pk": instance.pk},
+    #         )
+    #     elif role == "member":
+    #         representation["url"] = reverse(
+    #             "api:accounts:MemberRetrieveUpdateDestroy",
+    #             kwargs={"pk": instance.pk},
+    #         )
+    #     elif role == "visitor":
+    #         representation["url"] = reverse(
+    #             "api:accounts:VisitorRetrieveUpdateDestroy",
+    #             kwargs={"pk": instance.pk},
+    #         )
+    #     else:
+    #         pass
+    #     return representation

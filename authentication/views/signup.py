@@ -4,6 +4,7 @@ from django.core.mail import send_mail
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
+from rest_framework.reverse import reverse
 from rest_framework.views import APIView
 from rest_framework import status
 
@@ -22,7 +23,7 @@ class SignUp(APIView):
             token = RefreshToken.for_user(visitor.user)
             token["role"] = "visitor"
 
-            verify_url = f"{'https' if request.is_secure() else 'http'}://{request.get_host()}/api/auth/signup/verify/?token={token}"
+            verify_url = f"{reverse('api:authentication:VerifyEmail',request=request)}?token={token}"
             email = {
                 "to": visitor.user.email,
                 "subject": "GYM Sign Up Verification",

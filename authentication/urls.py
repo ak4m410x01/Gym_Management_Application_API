@@ -13,10 +13,10 @@ app_name = "authentication"
 
 
 urlpatterns = [
-    path("signup/", SignUp.as_view(), name="signup"),
-    path("signup/verify/", VerifyEmail.as_view(), name="verifyemail"),
+    path("signup/", SignUp.as_view(), name="SignUp"),
+    path("signup/verify/", VerifyEmail.as_view(), name="VerifyEmail"),
     # Token
-    path("token/", ObtainPairTokenView.as_view(), name="token"),
-    path("token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
-    path("token/verify/", TokenVerifyView.as_view(), name="token_verify"),
+    path("token/", ObtainPairTokenView.as_view(), name="ObtainPairTokenView"),
+    path("token/refresh/", TokenRefreshView.as_view(), name="TokenRefreshView"),
+    path("token/verify/", TokenVerifyView.as_view(), name="TokenVerifyView"),
 ]

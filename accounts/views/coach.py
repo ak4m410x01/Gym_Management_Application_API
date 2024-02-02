@@ -29,7 +29,7 @@ class CoachListCreate(ListCreateAPIView):
             return ()
 
 
-class CoachMemberRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
+class CoachRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
     queryset = Coach.objects.all()
     serializer_class = CoachSerializer
     permission_classes = (IsCoach,)

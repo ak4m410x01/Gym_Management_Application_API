@@ -17,7 +17,9 @@ class BaseCoachSerializer(serializers.ModelSerializer):
 
     city = serializers.CharField(source="user.city", required=False)
     address = serializers.CharField(source="user.address", required=False)
-    salary = serializers.CharField(source="salary.salary", required=False, read_only=True)
+    salary = serializers.CharField(
+        source="salary.salary", required=False, read_only=True
+    )
 
     phone = serializers.CharField(source="user.contact.phone", required=False)
     whatsapp = serializers.CharField(source="user.contact.whatsapp", required=False)
@@ -26,18 +28,34 @@ class BaseCoachSerializer(serializers.ModelSerializer):
     instagram = serializers.CharField(source="user.contact.instagram", required=False)
     twitter = serializers.CharField(source="user.contact.twitter", required=False)
 
-    is_active = serializers.BooleanField(source="user.is_active", required=False, read_only=True)
-    is_staff = serializers.BooleanField(source="user.is_staff", required=False, read_only=True)
-    is_superuser = serializers.BooleanField(source="user.is_superuser", required=False, read_only=True)
-    is_verified = serializers.BooleanField(source="user.is_verified", required=False, read_only=True)
+    is_active = serializers.BooleanField(
+        source="user.is_active", required=False, read_only=True
+    )
+    is_staff = serializers.BooleanField(
+        source="user.is_staff", required=False, read_only=True
+    )
+    is_superuser = serializers.BooleanField(
+        source="user.is_superuser", required=False, read_only=True
+    )
+    is_verified = serializers.BooleanField(
+        source="user.is_verified", required=False, read_only=True
+    )
 
-    last_login = serializers.DateTimeField(source="user.last_login", required=False, read_only=True)
-    date_joined = serializers.DateTimeField(source="user.joined_at", required=False, read_only=True)
+    last_login = serializers.DateTimeField(
+        source="user.last_login", required=False, read_only=True
+    )
+    date_joined = serializers.DateTimeField(
+        source="user.joined_at", required=False, read_only=True
+    )
+    url = serializers.HyperlinkedIdentityField(
+        view_name="api:accounts:CoachRetrieveUpdateDestroy", lookup_field="pk"
+    )
 
     class Meta:
         model = Coach
         ordering = (id,)
         fields = [
+            "url",
             "id",
             "email",
             "username",
@@ -68,7 +86,15 @@ class CoachSerializer(BaseCoachSerializer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if self.context.get("request") and self.context["request"].method == "PUT":
-            for field_name in ("email", "username", "password", "first_name", "last_name", "gender", "date_of_birth"):
+            for field_name in (
+                "email",
+                "username",
+                "password",
+                "first_name",
+                "last_name",
+                "gender",
+                "date_of_birth",
+            ):
                 self.fields[field_name].required = False
 
     def validate_username(self, username: str) -> str:

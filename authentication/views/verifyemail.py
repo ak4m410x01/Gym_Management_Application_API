@@ -4,6 +4,7 @@ from decouple import config
 from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
+from rest_framework.reverse import reverse
 from rest_framework import status
 
 from accounts.models.user import User
@@ -41,7 +42,10 @@ class VerifyEmail(GenericAPIView):
 
             user.is_verified = True
             user.save()
-            signin_url = f"{'https' if request.is_secure() else 'http'}://{request.get_host()}/api/auth/signin/"
+            signin_url = (
+                f"{reverse('api:authentication:ObtainPairTokenView',request=request)}"
+            )
+            print(signin_url)
             response["email"] = "Verification is successful."
             response["signin"] = f"Signin now {signin_url}"
 

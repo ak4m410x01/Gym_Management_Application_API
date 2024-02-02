@@ -32,11 +32,15 @@ class BaseMemberSerializer(serializers.ModelSerializer):
 
     last_login = serializers.DateTimeField(source="user.last_login", required=False, read_only=True)
     date_joined = serializers.DateTimeField(source="user.joined_at", required=False, read_only=True)
-
+    
+    url = serializers.HyperlinkedIdentityField(
+        view_name="api:accounts:MemberRetrieveUpdateDestroy", lookup_field="pk"
+    )
     class Meta:
         model = Member
         ordering = (id,)
         fields = [
+            "url",
             "id",
             "email",
             "username",
