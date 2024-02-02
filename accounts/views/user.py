@@ -14,4 +14,6 @@ class UserListAPIView(ListAPIView):
     serializer_class = UserSerializer
     filter_backends = (DjangoFilterBackend,)
     filterset_class = UserFilter
-    permission_classes = (IsDeveloper, IsAuthenticated)
+
+    def get_permissions(self):
+        return (IsDeveloper() or (IsAuthenticated(),),)

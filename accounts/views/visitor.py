@@ -21,7 +21,7 @@ class VisitorListCreate(ListCreateAPIView):
 
     def get_permissions(self):
         if self.request.method == "GET":
-            return (IsDeveloper() or IsAuthenticated(),)
+            return (IsDeveloper() or (IsAuthenticated(),),)
         elif self.request.method == "POST":
             return (IsDeveloper(),)
         else:
@@ -43,10 +43,12 @@ class VisitorRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
 
     def get_permissions(self):
         if self.request.method == "GET":
-            return (IsDeveloper() or IsAuthenticated(),)
+            return (IsDeveloper() or (IsAuthenticated(),),)
         elif self.request.method == "PUT":
-            return (IsDeveloper() or IsAuthenticated() or IsVisitor(),)
+            return (IsDeveloper() or (IsAuthenticated() and IsVisitor(),),)
         elif self.request.method == "DELETE":
-            return (IsDeveloper() or IsAuthenticated() or IsAdmin() or IsVisitor(),)
+            return (
+                IsDeveloper() or (IsAuthenticated() and (IsAdmin() or IsVisitor(),),),
+            )
         else:
             return ()

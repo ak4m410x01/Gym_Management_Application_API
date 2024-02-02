@@ -1,9 +1,10 @@
 from rest_framework.permissions import BasePermission
+from decouple import config
 
 
 class IsDeveloper(BasePermission):
     def has_permission(self, request, view):
-        return False
+        return config("IsDeveloperHasPermission", cast=bool)
 
     def has_object_permission(self, request, view, obj):
-        return False
+        return config("IsDeveloperHasObjectPermission", cast=bool)
