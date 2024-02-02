@@ -18,7 +18,7 @@ class BaseCoachSerializer(serializers.ModelSerializer):
     city = serializers.CharField(source="user.city", required=False)
     address = serializers.CharField(source="user.address", required=False)
     salary = serializers.CharField(
-        source="salary.salary", required=False, read_only=True
+        source="coachsalary.salary", required=False, read_only=True
     )
 
     phone = serializers.CharField(source="user.contact.phone", required=False)

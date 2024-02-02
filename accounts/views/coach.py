@@ -22,7 +22,7 @@ class CoachListCreate(ListCreateAPIView):
 
     def get_permissions(self):
         if self.request.method == "GET":
-            return (IsDeveloper() or (IsAuthenticated(),),)
+            return (IsDeveloper() or (IsAuthenticated() and IsAdmin(),),)
         elif self.request.method == "POST":
             return (IsDeveloper() or (IsAuthenticated() and IsAdmin(),),)
         else:
@@ -32,7 +32,6 @@ class CoachListCreate(ListCreateAPIView):
 class CoachRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
     queryset = Coach.objects.all()
     serializer_class = CoachSerializer
-    permission_classes = (IsCoach,)
 
     def perform_destroy(self, instance):
         user = User.objects.get(id=instance.user.id)
