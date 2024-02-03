@@ -1,16 +1,13 @@
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.permissions import IsAuthenticated
-
 from django_filters.rest_framework import DjangoFilterBackend
-
-from accounts.models.user import User, Contact
-from accounts.models.member import Member
 from accounts.serializers.member import MemberSerializer
-from accounts.filters.member import MemberFilter
-
 from accounts.permissions.isDeveloper import IsDeveloper
 from accounts.permissions.isMember import IsMember
 from accounts.permissions.isAdmin import IsAdmin
+from accounts.filters.member import MemberFilter
+from accounts.models.user import User, Contact
+from accounts.models.member import Member
 
 
 class MemberListCreate(ListCreateAPIView):

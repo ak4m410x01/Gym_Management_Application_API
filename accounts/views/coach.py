@@ -1,17 +1,14 @@
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.permissions import IsAuthenticated
-
 from django_filters.rest_framework import DjangoFilterBackend
-
-from accounts.models.user import User, Contact
-from accounts.models.coach import Coach
 from accounts.serializers.coach import CoachSerializer
-from accounts.filters.coach import CoachFilter
-from accounts.permissions.isAdmin import IsAdmin
-
 from accounts.permissions.isDeveloper import IsDeveloper
 from accounts.permissions.isCoach import IsCoach
 from accounts.permissions.isAdmin import IsAdmin
+from accounts.permissions.isAdmin import IsAdmin
+from accounts.filters.coach import CoachFilter
+from accounts.models.user import User, Contact
+from accounts.models.coach import Coach
 
 
 class CoachListCreate(ListCreateAPIView):
@@ -22,7 +19,7 @@ class CoachListCreate(ListCreateAPIView):
 
     def get_permissions(self):
         if self.request.method == "GET":
-            return (IsDeveloper() or (IsAuthenticated() and IsAdmin(),),)
+            return (IsDeveloper() or (IsAuthenticated(),),)
         elif self.request.method == "POST":
             return (IsDeveloper() or (IsAuthenticated() and IsAdmin(),),)
         else:

@@ -8,4 +8,3 @@ class CoachSalary(models.Model):
 
     def __str__(self) -> str:
         return str(self.coach.user.username)
-

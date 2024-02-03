@@ -1,5 +1,4 @@
 from django.db import models
-
 from accounts.models.user import User
 
 

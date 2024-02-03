@@ -1,12 +1,10 @@
 import jwt
 from decouple import config
-
 from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework import status
-
 from accounts.models.user import User
 
 

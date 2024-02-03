@@ -1,12 +1,10 @@
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.generics import ListAPIView
-
-from django_filters.rest_framework import DjangoFilterBackend
-
-from accounts.models.user import User
+from accounts.permissions.isDeveloper import IsDeveloper
 from accounts.serializers.user import UserSerializer
 from accounts.filters.user import UserFilter
-from accounts.permissions.isDeveloper import IsDeveloper
+from accounts.models.user import User
 
 
 class UserListAPIView(ListAPIView):

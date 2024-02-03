@@ -1,13 +1,10 @@
 from typing import Dict
-
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
-
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import AllowAny
-
-from authentication.serializers.obtain_pair_token import ObtainPairTokenSerializer
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework import status
+from authentication.serializers.obtainPairToken import ObtainPairTokenSerializer
 from accounts.models.user import User
 from accounts.models.admin import Admin
 from accounts.models.coach import Coach

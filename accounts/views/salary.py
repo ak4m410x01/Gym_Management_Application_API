@@ -1,11 +1,10 @@
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.permissions import IsAuthenticated
-
-from accounts.models.salary import CoachSalary
 from accounts.serializers.salary import CoachSalarySerializer
-
 from accounts.permissions.isDeveloper import IsDeveloper
 from accounts.permissions.isAdmin import IsAdmin
+from accounts.permissions.isCoach import IsCoach
+from accounts.models.salary import CoachSalary
 
 
 class CoachSalaryListCreate(ListCreateAPIView):
@@ -27,7 +26,7 @@ class CoachSalaryRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
 
     def get_permissions(self):
         if self.request.method == "GET":
-            return (IsDeveloper() or (IsAuthenticated() and IsAdmin(),),)
+            return (IsDeveloper() or (IsAuthenticated() and (IsAdmin(), IsCoach()),),)
         elif self.request.method == "PUT":
             return (IsDeveloper() or (IsAuthenticated() and IsAdmin(),),)
         elif self.request.method == "DELETE":

@@ -1,13 +1,13 @@
 from re import match
+from datetime import datetime, date
 from rest_framework import serializers
-
 from accounts.models.coach import Coach
 from accounts.models.user import User, Contact
 
 
 class BaseCoachSerializer(serializers.ModelSerializer):
-    email = serializers.EmailField(source="user.email")
     username = serializers.CharField(source="user.username")
+    email = serializers.EmailField(source="user.email")
     password = serializers.CharField(source="user.password", write_only=True)
 
     first_name = serializers.CharField(source="user.first_name")
@@ -17,9 +17,6 @@ class BaseCoachSerializer(serializers.ModelSerializer):
 
     city = serializers.CharField(source="user.city", required=False)
     address = serializers.CharField(source="user.address", required=False)
-    salary = serializers.CharField(
-        source="coachsalary.salary", required=False, read_only=True
-    )
 
     phone = serializers.CharField(source="user.contact.phone", required=False)
     whatsapp = serializers.CharField(source="user.contact.whatsapp", required=False)
@@ -28,27 +25,21 @@ class BaseCoachSerializer(serializers.ModelSerializer):
     instagram = serializers.CharField(source="user.contact.instagram", required=False)
     twitter = serializers.CharField(source="user.contact.twitter", required=False)
 
-    is_active = serializers.BooleanField(
-        source="user.is_active", required=False, read_only=True
-    )
-    is_staff = serializers.BooleanField(
-        source="user.is_staff", required=False, read_only=True
-    )
-    is_superuser = serializers.BooleanField(
-        source="user.is_superuser", required=False, read_only=True
-    )
-    is_verified = serializers.BooleanField(
-        source="user.is_verified", required=False, read_only=True
+    last_login = serializers.DateTimeField(
+        source="user.last_login",
+        required=False,
+        read_only=True,
     )
 
-    last_login = serializers.DateTimeField(
-        source="user.last_login", required=False, read_only=True
-    )
     date_joined = serializers.DateTimeField(
-        source="user.joined_at", required=False, read_only=True
+        source="user.date_joined",
+        required=False,
+        read_only=True,
     )
+
     url = serializers.HyperlinkedIdentityField(
-        view_name="api:accounts:CoachRetrieveUpdateDestroy", lookup_field="pk"
+        view_name="api:accounts:CoachRetrieveUpdateDestroy",
+        lookup_field="pk",
     )
 
     class Meta:
@@ -57,8 +48,8 @@ class BaseCoachSerializer(serializers.ModelSerializer):
         fields = [
             "url",
             "id",
-            "email",
             "username",
+            "email",
             "password",
             "first_name",
             "last_name",
@@ -66,27 +57,103 @@ class BaseCoachSerializer(serializers.ModelSerializer):
             "date_of_birth",
             "city",
             "address",
-            "salary",
             "phone",
             "whatsapp",
             "telegram",
             "facebook",
             "instagram",
             "twitter",
-            "is_active",
-            "is_staff",
-            "is_superuser",
-            "is_verified",
             "last_login",
             "date_joined",
         ]
+
+    def validate_username(self, value: str) -> str:
+        qs = User.objects.filter(username__iexact=value)
+        if qs.exists():
+            raise serializers.ValidationError(f"{value} already used. try another one!")
+
+        regex = r"^[a-zA-Z_][A-Za-z0-9_\.]+$"
+        if not match(regex, value):
+            raise serializers.ValidationError("Invalid username :(")
+
+        return value
+
+    def validate_email(self, value: str) -> str:
+        qs = User.objects.filter(email__iexact=value)
+        if qs.exists():
+            raise serializers.ValidationError(f"{value} already used. try another one!")
+        return value
+
+    def validate_gender(self, value: str) -> str:
+        regex = r"^[mf]$"
+        if not match(regex, value):
+            raise serializers.ValidationError(f"gender must be 'm' or 'f'.")
+        return value
+
+    def validate_date_of_birth(self, value: str) -> str:
+        if isinstance(value, date):
+            value = value.strftime("%Y-%m-%d")
+
+        try:
+            dob = datetime.strptime(value, "%Y-%m-%d")
+        except ValueError:
+            raise serializers.ValidationError(
+                "Date of birth must be in the format YYYY-MM-DD."
+            )
+
+        if dob.date() > datetime.now().date():
+            raise serializers.ValidationError("Date of birth cannot be in the future.")
+
+        return value
+
+    def validate_phone(self, value: str) -> str:
+        regex = r"^\+201[0125]\d{8}$"
+        if not match(regex, value):
+            raise serializers.ValidationError(
+                "Egyptian phone number must be like: '+201234567890'"
+            )
+
+        return value
+
+    def validate_whatsapp(self, value: str) -> str:
+        regex = r"^https://wa\.me/201[0125]\d{8}$"
+        if not match(regex, value):
+            raise serializers.ValidationError(
+                "Egyptian whatsapp link must be like: 'https://wa.me/201234567890'"
+            )
+        return value
+
+    def validate_telegram(self, value: str) -> str:
+        regex = r"^https://t\.me/[A-Za-z0-9_]{1,}$"
+        if not match(regex, value):
+            raise serializers.ValidationError("Invalid Telegram Link :(")
+        return value
+
+    def validate_facebook(self, value: str) -> str:
+        regex = r"^https://www\.facebook\.com/[A-Za-z0-9.]+$"
+        if not match(regex, value):
+            raise serializers.ValidationError("Invalid Facebook Link :(")
+        return value
+
+    def validate_instagram(self, value: str) -> str:
+        regex = r"^https://www\.instagram\.com/[A-Za-z0-9_\.]+$"
+        if not match(regex, value):
+            raise serializers.ValidationError("Invalid Instagram Link :(")
+        return value
+
+    def validate_twitter(self, value: str) -> str:
+        regex = r"^https://(?:twitter|x)\.com/[A-Za-z0-9_]{1,15}$"
+        if not match(regex, value):
+            raise serializers.ValidationError("Invalid Twitter Link :(")
+        return value
 
 
 class CoachSerializer(BaseCoachSerializer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if self.context.get("request") and self.context["request"].method == "PUT":
-            for field_name in (
+        request = self.context.get("request")
+        if request and request.method == "PUT":
+            NOT_REQUIRED_FILEDS = (
                 "email",
                 "username",
                 "password",
@@ -94,24 +161,9 @@ class CoachSerializer(BaseCoachSerializer):
                 "last_name",
                 "gender",
                 "date_of_birth",
-            ):
+            )
+            for field_name in NOT_REQUIRED_FILEDS:
                 self.fields[field_name].required = False
-
-    def validate_username(self, username: str) -> str:
-        if User.objects.filter(username=username).exists():
-            raise serializers.ValidationError(f"username already exists.")
-        return username
-
-    def validate_email(self, email: str) -> str:
-        if User.objects.filter(email=email).exists():
-            raise serializers.ValidationError(f"email already exists.")
-        return email
-
-    def validate_gender(self, gender: str) -> str:
-        regex = r"^[MF]$"
-        if not match(regex, gender):
-            raise serializers.ValidationError(f"gender must be 'M' or 'F'.")
-        return gender
 
     def create(self, validated_data):
         user_data = validated_data.pop("user", {})
@@ -124,19 +176,20 @@ class CoachSerializer(BaseCoachSerializer):
         return coach
 
     def update(self, instance, validated_data):
+        user_data = validated_data.pop("user", {})
+        contact_data = user_data.pop("contact", {})
+
         # Contact Model
-        contact_data = validated_data.pop("contact", {})
         for key, value in contact_data.items():
             setattr(instance.user.contact, key, value)
         instance.user.contact.save()
 
-        # user Model
-        user_data = validated_data.pop("user", {})
+        # User Model
         for key, value in user_data.items():
             setattr(instance.user, key, value)
         instance.user.save()
 
-        # Coach Model
+        # Admin Model
         for key, value in validated_data.items():
             setattr(instance, key, value)
         instance.save()

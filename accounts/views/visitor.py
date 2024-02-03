@@ -1,16 +1,13 @@
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.permissions import IsAuthenticated
-
 from django_filters.rest_framework import DjangoFilterBackend
-
-from accounts.models.user import User, Contact
-from accounts.models.visitor import Visitor
 from accounts.serializers.visitor import VisitorSerializer
-from accounts.filters.visitor import VisitorFilter
-
 from accounts.permissions.isDeveloper import IsDeveloper
 from accounts.permissions.isVisitor import IsVisitor
 from accounts.permissions.isAdmin import IsAdmin
+from accounts.filters.visitor import VisitorFilter
+from accounts.models.user import User, Contact
+from accounts.models.visitor import Visitor
 
 
 class VisitorListCreate(ListCreateAPIView):

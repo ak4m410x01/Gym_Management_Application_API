@@ -1,17 +1,10 @@
 from rest_framework import serializers
 from rest_framework.reverse import reverse
-
-from accounts.models.user import User, Contact
-
-
-class ContactSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Contact
-        ordering = (id,)
-        fields = "__all__"
+from accounts.models.user import User
 
 
 class UserSerializer(serializers.ModelSerializer):
+    # Contacts
     phone = serializers.CharField(source="contact.phone")
     whatsapp = serializers.CharField(source="contact.whatsapp")
     telegram = serializers.CharField(source="contact.telegram")
@@ -19,19 +12,18 @@ class UserSerializer(serializers.ModelSerializer):
     instagram = serializers.CharField(source="contact.instagram")
     twitter = serializers.CharField(source="contact.twitter")
 
-    role = serializers.SerializerMethodField()
-    role_id = serializers.SerializerMethodField()
     url = serializers.SerializerMethodField(read_only=True)
+    user_id = serializers.SerializerMethodField(read_only=True)
+    role = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = User
         fields = [
             "url",
-            "id",
+            "user_id",
             "role",
-            "role_id",
-            "email",
             "username",
+            "email",
             "password",
             "first_name",
             "last_name",
@@ -45,10 +37,6 @@ class UserSerializer(serializers.ModelSerializer):
             "facebook",
             "instagram",
             "twitter",
-            "is_active",
-            "is_staff",
-            "is_superuser",
-            "is_verified",
             "last_login",
             "date_joined",
         ]
@@ -65,7 +53,7 @@ class UserSerializer(serializers.ModelSerializer):
         else:
             return None
 
-    def get_role_id(self, obj):
+    def get_user_id(self, obj):
         if hasattr(obj, "admin"):
             return obj.admin.id
         elif hasattr(obj, "coach"):
@@ -83,6 +71,7 @@ class UserSerializer(serializers.ModelSerializer):
             return None
 
         role = self.get_role(obj)
+        user_id = self.get_user_id(obj)
         view_name = ""
         if role == "admin":
             view_name = "api:accounts:AdminRetrieveUpdateDestroy"
@@ -97,6 +86,6 @@ class UserSerializer(serializers.ModelSerializer):
 
         return reverse(
             view_name,
-            kwargs={"pk": obj.pk},
+            kwargs={"pk": user_id},
             request=request,
         )

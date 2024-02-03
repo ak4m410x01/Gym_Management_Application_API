@@ -1,16 +1,11 @@
 from django.urls import path
-
-
-from authentication.views.verifyemail import VerifyEmail
-from authentication.views.signup import SignUp
-
-from authentication.views.obtain_pair_token import ObtainPairTokenView
 from rest_framework_simplejwt.views import TokenRefreshView
 from rest_framework_simplejwt.views import TokenVerifyView
-
+from authentication.views.verifyemail import VerifyEmail
+from authentication.views.signup import SignUp
+from authentication.views.obtainPairToken import ObtainPairTokenView
 
 app_name = "authentication"
-
 
 urlpatterns = [
     path("signup/", SignUp.as_view(), name="SignUp"),

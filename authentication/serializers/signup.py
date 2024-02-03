@@ -1,6 +1,5 @@
 from re import match
 from rest_framework.serializers import ValidationError
-
 from accounts.serializers.visitor import BaseVisitorSerializer
 from accounts.models.user import User, Contact
 from accounts.models.visitor import Visitor
