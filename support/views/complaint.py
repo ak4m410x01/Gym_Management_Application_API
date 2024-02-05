@@ -1,10 +1,16 @@
-from jwt import decode
-from decouple import config
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.permissions import IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend
+
 from support.serializers.complaint import ComplaintSerializer
 from support.filters.complaint import ComplaintFilter
 from support.models.complaint import Complaint
+
+from accounts.permissions.isMember import IsMember
+from accounts.permissions.isAdmin import IsAdmin
+
+from jwt import decode
+from decouple import config
 
 
 class ComplaintListCreate(ListCreateAPIView):
@@ -26,7 +32,23 @@ class ComplaintListCreate(ListCreateAPIView):
             return qs
         return qs.filter(member=payload.get("user_id"))
 
+    def get_permissions(self):
+        if self.request.method == "GET":
+            self.permission_classes = [IsAuthenticated & (IsAdmin | IsMember)]
+        elif self.request.method == "POST":
+            self.permission_classes = [IsAuthenticated & IsMember]
+        return super().get_permissions()
+
 
 class ComplaintRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
     queryset = Complaint.objects.all()
     serializer_class = ComplaintSerializer
+
+    def get_permissions(self):
+        if self.request.method == "GET":
+            self.permission_classes = [IsAuthenticated & (IsAdmin | IsMember)]
+        elif self.request.method == "PUT":
+            self.permission_classes = [IsAuthenticated & IsMember]
+        elif self.request.method == "DELETE":
+            self.permission_classes = [IsAuthenticated & IsAdmin]
+        return super().get_permissions()
