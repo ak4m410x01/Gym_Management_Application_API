@@ -16,12 +16,12 @@ class CoachListCreate(ListCreateAPIView):
     filter_backends = (DjangoFilterBackend,)
     filterset_class = CoachFilter
 
-    # def get_permissions(self):
-    #     if self.request.method == "GET":
-    #         self.permission_classes = [IsAuthenticated]
-    #     elif self.request.method == "POST":
-    #         self.permission_classes = [NoOne]
-    #     return super().get_permissions()
+    def get_permissions(self):
+        if self.request.method == "GET":
+            self.permission_classes = [IsAuthenticated]
+        elif self.request.method == "POST":
+            self.permission_classes = [NoOne]
+        return super().get_permissions()
 
 
 class CoachRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):

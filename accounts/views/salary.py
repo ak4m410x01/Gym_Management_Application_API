@@ -1,7 +1,6 @@
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.permissions import IsAuthenticated
 from accounts.serializers.salary import CoachSalarySerializer
-from accounts.permissions.isDeveloper import IsDeveloper
 from accounts.permissions.isAdmin import IsAdmin
 from accounts.permissions.isCoach import IsCoach
 from accounts.models.salary import CoachSalary
@@ -13,11 +12,10 @@ class CoachSalaryListCreate(ListCreateAPIView):
 
     def get_permissions(self):
         if self.request.method == "GET":
-            return (IsDeveloper() or (IsAuthenticated() and IsAdmin(),),)
+            self.permission_classes = [IsAuthenticated & IsAdmin]
         elif self.request.method == "POST":
-            return (IsDeveloper() or (IsAuthenticated() and IsAdmin(),),)
-        else:
-            return ()
+            self.permission_classes = [IsAuthenticated & IsAdmin]
+        return super().get_permissions()
 
 
 class CoachSalaryRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
@@ -26,10 +24,9 @@ class CoachSalaryRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
 
     def get_permissions(self):
         if self.request.method == "GET":
-            return (IsDeveloper() or (IsAuthenticated() and (IsAdmin(), IsCoach()),),)
+            self.permission_classes = [IsAuthenticated & (IsCoach | IsAdmin)]
         elif self.request.method == "PUT":
-            return (IsDeveloper() or (IsAuthenticated() and IsAdmin(),),)
+            self.permission_classes = [IsAuthenticated & IsAdmin]
         elif self.request.method == "DELETE":
-            return (IsDeveloper() or (IsAuthenticated() and IsAdmin(),),)
-        else:
-            return ()
+            self.permission_classes = [IsAuthenticated & IsAdmin]
+        return super().get_permissions()
