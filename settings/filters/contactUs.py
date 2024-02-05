@@ -1,10 +1,10 @@
 import django_filters
 
-from accounts.models.visitor import Visitor
+from settings.models.contactUs import ContactUs
 
 
 class ContactUsFilter(django_filters.FilterSet):
-    contry = django_filters.CharFilter(field_name="contry", lookup_expr="icontains")
+    country = django_filters.CharFilter(field_name="country", lookup_expr="icontains")
     city = django_filters.CharFilter(field_name="city", lookup_expr="icontains")
     address = django_filters.CharFilter(field_name="address", lookup_expr="icontains")
     email = django_filters.CharFilter(field_name="email", lookup_expr="icontains")
@@ -18,7 +18,7 @@ class ContactUsFilter(django_filters.FilterSet):
     twitter = django_filters.CharFilter(field_name="twitter", lookup_expr="icontains")
 
     class Meta:
-        model = Visitor
+        model = ContactUs
         fields = [
             "country",
             "city",
