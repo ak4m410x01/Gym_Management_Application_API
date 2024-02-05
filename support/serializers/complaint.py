@@ -7,12 +7,6 @@ from accounts.models.user import User
 
 class ComplaintSerializer(serializers.ModelSerializer):
     member_username = serializers.CharField(source="member.user.username")
-    member_first_name = serializers.CharField(
-        source="member.user.first_name", read_only=True
-    )
-    member_last_name = serializers.CharField(
-        source="member.user.last_name", read_only=True
-    )
     member_url = serializers.SerializerMethodField()
     complaint_url = serializers.HyperlinkedIdentityField(
         view_name="api:support:ComplaintRetrieveUpdateDestroy",
@@ -32,8 +26,6 @@ class ComplaintSerializer(serializers.ModelSerializer):
             "status",
             "member_url",
             "member_username",
-            "member_first_name",
-            "member_last_name",
         ]
         extra_kwargs = {
             "created_at": {"read_only": True},

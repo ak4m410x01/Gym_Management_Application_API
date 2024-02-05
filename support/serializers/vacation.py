@@ -8,13 +8,8 @@ from accounts.models.user import User
 
 class VacationSerializer(serializers.ModelSerializer):
     coach_username = serializers.CharField(source="coach.user.username")
-    coach_first_name = serializers.CharField(
-        source="coach.user.first_name", read_only=True
-    )
-    coach_last_name = serializers.CharField(
-        source="coach.user.last_name", read_only=True
-    )
     coach_url = serializers.SerializerMethodField()
+
     vacation_url = serializers.HyperlinkedIdentityField(
         view_name="api:support:VacationRetrieveUpdateDestroy",
         lookup_field="pk",
@@ -34,8 +29,6 @@ class VacationSerializer(serializers.ModelSerializer):
             "status",
             "coach_url",
             "coach_username",
-            "coach_first_name",
-            "coach_last_name",
         ]
         extra_kwargs = {
             "created_at": {"read_only": True},
@@ -93,3 +86,6 @@ class VacationSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         validated_data.pop("coach", None)
         return super().update(instance, validated_data)
+    
+    def to_representation(self, instance):
+        return super().to_representation(instance)
