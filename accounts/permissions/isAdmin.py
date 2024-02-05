@@ -1,28 +1,14 @@
-from jwt import decode
-from decouple import config
-
 from rest_framework.permissions import BasePermission
+from authentication.utils.token import JWTToken
 
 
 class IsAdmin(BasePermission):
     def has_permission(self, request, view):
         token = request.auth.token.decode()
-
-        payload = decode(
-            token,
-            key=config("JWT_SECRET_KEY"),
-            algorithms=["HS256"],
-        )
-
-        return payload.get("role") == "admin"
+        payload = JWTToken.get_payload(token)
+        return payload.get("user_role") == "admin"
 
     def has_object_permission(self, request, view, obj):
         token = request.auth.token.decode()
-
-        payload = decode(
-            token,
-            key=config("JWT_SECRET_KEY"),
-            algorithms=["HS256"],
-        )
-
+        payload = JWTToken.get_payload(token)
         return payload.get("username") == obj.user.username
