@@ -3,7 +3,6 @@ from rest_framework.permissions import IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend
 from accounts.serializers.visitor import VisitorSerializer
 from accounts.permissions.isVisitor import IsVisitor
-from accounts.permissions.isAdmin import IsAdmin
 from accounts.permissions.noOne import NoOne
 from accounts.filters.visitor import VisitorFilter
 from accounts.models.user import User, Contact
