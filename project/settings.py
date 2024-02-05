@@ -59,6 +59,7 @@ PROJECT_APPS = [
     "authentication.apps.AuthenticationConfig",
     "support.apps.SupportConfig",
     "settings.apps.SettingsConfig",
+    "jobs.apps.JobsConfig",
 ]
 
 # Combine all apps
@@ -83,7 +84,7 @@ REST_FRAMEWORK = {
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
     # Permissions
-    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
+    # "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
     # Pagination
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
     "PAGE_SIZE": 20,
