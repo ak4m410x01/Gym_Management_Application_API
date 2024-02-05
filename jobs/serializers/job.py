@@ -1,12 +1,10 @@
+from rest_framework.reverse import reverse
 from rest_framework import serializers
-from rest_framework.fields import empty
 from jobs.models.job import Job
 
 
 class JobSerializer(serializers.ModelSerializer):
-    url = serializers.HyperlinkedIdentityField(
-        view_name="api:jobs:JobRetrieveUpdateDestroy", lookup_field="pk", read_only=True
-    )
+    url = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Job
@@ -38,3 +36,14 @@ class JobSerializer(serializers.ModelSerializer):
                 "job_type must be 'fulltime' or 'parttime'"
             )
         return value
+
+    def get_url(self, obj):
+        request = self.context.get("request")
+        if not request:
+            return None
+
+        return reverse(
+            "api:jobs:JobRetrieveUpdateDestroy",
+            kwargs={"pk": obj.id},
+            request=request,
+        )

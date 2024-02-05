@@ -15,12 +15,12 @@ class VisitorListCreate(ListCreateAPIView):
     filter_backends = (DjangoFilterBackend,)
     filterset_class = VisitorFilter
 
-    def get_permissions(self):
-        if self.request.method == "GET":
-            self.permission_classes = [IsAuthenticated]
-        elif self.request.method == "POST":
-            self.permission_classes = [NoOne]
-        return super().get_permissions()
+    # def get_permissions(self):
+    #     if self.request.method == "GET":
+    #         self.permission_classes = [IsAuthenticated]
+    #     elif self.request.method == "POST":
+    #         self.permission_classes = [NoOne]
+    #     return super().get_permissions()
 
 
 class VisitorRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
