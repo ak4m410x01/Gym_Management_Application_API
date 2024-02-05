@@ -57,6 +57,7 @@ PROJECT_APPS = [
     "api.apps.ApiConfig",
     "accounts.apps.AccountsConfig",
     "authentication.apps.AuthenticationConfig",
+    "support.apps.SupportConfig",
 ]
 
 # Combine all apps
