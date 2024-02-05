@@ -2,9 +2,9 @@ from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIV
 from rest_framework.permissions import IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend
 from accounts.serializers.visitor import VisitorSerializer
-from accounts.permissions.isDeveloper import IsDeveloper
 from accounts.permissions.isVisitor import IsVisitor
 from accounts.permissions.isAdmin import IsAdmin
+from accounts.permissions.noOne import NoOne
 from accounts.filters.visitor import VisitorFilter
 from accounts.models.user import User, Contact
 from accounts.models.visitor import Visitor
@@ -18,11 +18,10 @@ class VisitorListCreate(ListCreateAPIView):
 
     def get_permissions(self):
         if self.request.method == "GET":
-            return (IsDeveloper() or (IsAuthenticated(),),)
+            self.permission_classes = [IsAuthenticated]
         elif self.request.method == "POST":
-            return (IsDeveloper(),)
-        else:
-            return ()
+            self.permission_classes = [NoOne]
+        return super().get_permissions()
 
 
 class VisitorRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
@@ -35,17 +34,13 @@ class VisitorRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
 
         contact.delete()
         user.delete()
-
         return super().perform_destroy(instance)
 
     def get_permissions(self):
         if self.request.method == "GET":
-            return (IsDeveloper() or (IsAuthenticated(),),)
+            self.permission_classes = [IsAuthenticated]
         elif self.request.method == "PUT":
-            return (IsDeveloper() or (IsAuthenticated() and IsVisitor(),),)
+            self.permission_classes = [IsAuthenticated & IsVisitor]
         elif self.request.method == "DELETE":
-            return (
-                IsDeveloper() or (IsAuthenticated() and (IsAdmin() or IsVisitor(),),),
-            )
-        else:
-            return ()
+            self.permission_classes = [IsAuthenticated & IsVisitor]
+        return super().get_permissions()

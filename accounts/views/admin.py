@@ -2,12 +2,10 @@ from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIV
 from rest_framework.permissions import IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend
 from accounts.serializers.admin import AdminSerializer
-from accounts.permissions.isDeveloper import IsDeveloper
 from accounts.permissions.isAdmin import IsAdmin
 from accounts.filters.admin import AdminFilter
 from accounts.models.user import User, Contact
 from accounts.models.admin import Admin
-
 
 
 class AdminListCreate(ListCreateAPIView):
@@ -18,11 +16,10 @@ class AdminListCreate(ListCreateAPIView):
 
     def get_permissions(self):
         if self.request.method == "GET":
-            return (IsDeveloper() or (IsAuthenticated(),),)
+            self.permission_classes = [IsAuthenticated]
         elif self.request.method == "POST":
-            return (IsDeveloper() or (IsAuthenticated() and IsAdmin(),),)
-        else:
-            return ()
+            self.permission_classes = [IsAuthenticated & IsAdmin]
+        return super().get_permissions()
 
 
 class AdminRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
@@ -41,10 +38,9 @@ class AdminRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
 
     def get_permissions(self):
         if self.request.method == "GET":
-            return (IsDeveloper() or (IsAuthenticated(),),)
+            self.permission_classes = [IsAuthenticated]
         elif self.request.method == "PUT":
-            return (IsDeveloper() or (IsAuthenticated() and IsAdmin(),),)
+            self.permission_classes = [IsAuthenticated & IsAdmin]
         elif self.request.method == "DELETE":
-            return (IsDeveloper() or (IsAuthenticated() and IsAdmin(),),)
-        else:
-            return ()
+            self.permission_classes = [IsAuthenticated & IsAdmin]
+        return super().get_permissions()

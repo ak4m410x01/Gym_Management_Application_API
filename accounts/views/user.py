@@ -14,4 +14,5 @@ class UserListAPIView(ListAPIView):
     filterset_class = UserFilter
 
     def get_permissions(self):
-        return (IsDeveloper() or (IsAuthenticated(),),)
+        self.permission_classes = [IsAuthenticated]
+        return super().get_permissions()
