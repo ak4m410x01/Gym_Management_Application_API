@@ -17,3 +17,6 @@ class Applicant(models.Model):
 
     class Meta:
         unique_together = ("applicant", "job")
+
+    def __str__(self) -> str:
+        return f"{self.applicant.username}"

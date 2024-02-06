@@ -1,19 +1,23 @@
 from rest_framework import serializers
-from rest_framework.fields import empty
 from rest_framework.reverse import reverse
 from jobs.models.applicant import Applicant
+from jobs.models.job import Job
 from accounts.models.user import User
+from authentication.utils.token import JWTToken
 
 
 class ApplicantSerializer(serializers.ModelSerializer):
     url = serializers.SerializerMethodField(read_only=True)
 
     job_url = serializers.SerializerMethodField(read_only=True)
+    job_id = serializers.IntegerField(source="job.id")
     job_title = serializers.CharField(source="job.title", read_only=True)
 
     applicant_url = serializers.SerializerMethodField(read_only=True)
     applicant_role = serializers.SerializerMethodField(read_only=True)
-    applicant_username = serializers.CharField(source="applicant.username")
+    applicant_username = serializers.CharField(
+        source="applicant.username", read_only=True
+    )
 
     class Meta:
         model = Applicant
@@ -21,37 +25,44 @@ class ApplicantSerializer(serializers.ModelSerializer):
             "url",
             "status",
             "job_url",
+            "job_id",
             "job_title",
             "applicant_url",
             "applicant_role",
             "applicant_username",
             "applied_at",
         ]
+        extra_kwargs = {
+            "applied_at": {"read_only": True},
+        }
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        request = self.context.get("request")
-        if request and request.method == "PUT":
-            self.fields["applicant_username"].required = False
-            self.fields["applicant_username"].read_only = True
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            request = self.context.get("request")
+            if request and request.method == "PUT":
+                self.fields["job_id"].required = False
 
     def validate_status(self, value):
         if value not in ("refused", "accepted"):
             raise serializers.ValidationError("Enter 'refused' or 'accepted'.")
         return value
 
-    def validate_applicant_username(self, value):
-        user = User.objects.filter(username__iexact=value)
-        if not user.exists():
-            raise serializers.ValidationError(f"{value} account does not exists.")
+    def validate_job_id(self, value):
+        qs = Job.objects.filter(id=value)
+        if not qs.exists():
+            raise serializers.ValidationError("Job does not exists.")
 
-        job_id = self.context["view"].kwargs["pk"]
+        request = self.context.get("request")
+        if not request or not request.auth or not request.auth.token:
+            raise serializers.ValidationError("Missed Auth Token.")
 
-        applicant = Applicant.objects.filter(
-            applicant__username__iexact=value, job=job_id
-        )
-        if applicant.exists():
-            raise serializers.ValidationError(f"{value} already applied.")
+        token = request.auth.token.decode()
+        payload = JWTToken.get_payload(token)
+        username = payload.get("username")
+
+        qs = Applicant.objects.filter(applicant__username=username, job=value)
+        if qs.exists():
+            raise serializers.ValidationError(f"{username} already applied before.")
 
         return value
 
@@ -61,7 +72,7 @@ class ApplicantSerializer(serializers.ModelSerializer):
             return None
         return reverse(
             "api:jobs:ApplicantRetrieveUpdateDestroy",
-            kwargs={"job_id": obj.job.id, "applicant_id": obj.id},
+            kwargs={"pk": obj.id},
             request=request,
         )
 
@@ -124,8 +135,13 @@ class ApplicantSerializer(serializers.ModelSerializer):
         return reverse(view_name, kwargs={"pk": applicant_id}, request=request)
 
     def create(self, validated_data):
-        username = validated_data["applicant"]["username"]
-        user = User.objects.filter(username__iexact=username).first()
+        request = self.context.get("request")
 
-        job_id = self.context["view"].kwargs["pk"]
+        token = request.auth.token.decode()
+        payload = JWTToken.get_payload(token)
+
+        username = payload.get("username")
+        user = User.objects.get(username__iexact=username)
+        job_id = validated_data.get("job")["id"]
+
         return Applicant.objects.create(applicant=user, job_id=job_id)
