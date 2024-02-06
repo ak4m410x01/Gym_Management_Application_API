@@ -1,6 +1,7 @@
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.permissions import IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend
+from support.permissions.isComplaintOwner import IsComplaintOwner
 from support.serializers.complaint import ComplaintSerializer
 from support.filters.complaint import ComplaintFilter
 from support.models.complaint import Complaint
@@ -42,9 +43,9 @@ class ComplaintRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
 
     def get_permissions(self):
         if self.request.method == "GET":
-            self.permission_classes = [IsAuthenticated & (IsAdmin | IsMember)]
+            self.permission_classes = [IsAuthenticated & (IsComplaintOwner | IsAdmin)]
         elif self.request.method == "PUT":
-            self.permission_classes = [IsAuthenticated & IsMember]
-        elif self.request.method == "DELETE":
             self.permission_classes = [IsAuthenticated & IsAdmin]
+        elif self.request.method == "DELETE":
+            self.permission_classes = [IsAuthenticated & (IsComplaintOwner | IsAdmin)]
         return super().get_permissions()
