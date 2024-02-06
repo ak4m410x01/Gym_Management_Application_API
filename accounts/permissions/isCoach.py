@@ -11,4 +11,4 @@ class IsCoach(BasePermission):
     def has_object_permission(self, request, view, obj):
         token = request.auth.token.decode()
         payload = JWTToken.get_payload(token)
-        return payload.get("username") == obj.user.username
+        return payload.get("user_role") == "coach"

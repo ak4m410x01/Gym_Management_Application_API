@@ -2,6 +2,7 @@ from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIV
 from rest_framework.permissions import IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend
 from accounts.serializers.salary import CoachSalarySerializer
+from accounts.permissions.isSalaryOwner import IsSalaryOwner
 from accounts.permissions.isAdmin import IsAdmin
 from accounts.permissions.isCoach import IsCoach
 from accounts.filters.salary import SalaryFilter
@@ -18,14 +19,15 @@ class CoachSalaryListCreate(ListCreateAPIView):
     def get_queryset(self):
         qs = super().get_queryset()
 
+        if not self.request.auth:
+            return qs.none()
+
         token = self.request.auth.token.decode()
         payload = JWTToken.get_payload(token)
 
         if payload.get("user_role") == "admin":
             return qs
-        elif payload.get("username") == self.request.user.username:
-            return qs.filter(coach=payload.get("user_id"))
-        return qs.none()
+        return qs.filter(coach=payload.get("user_id"))
 
     def get_permissions(self):
         if self.request.method == "GET":
@@ -41,7 +43,7 @@ class CoachSalaryRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
 
     def get_permissions(self):
         if self.request.method == "GET":
-            self.permission_classes = [IsAuthenticated & (IsCoach | IsAdmin)]
+            self.permission_classes = [IsAuthenticated & (IsSalaryOwner | IsAdmin)]
         elif self.request.method == "PUT":
             self.permission_classes = [IsAuthenticated & IsAdmin]
         elif self.request.method == "DELETE":

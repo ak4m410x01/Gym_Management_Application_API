@@ -48,7 +48,7 @@ class CoachSalarySerializer(serializers.ModelSerializer):
 
         return reverse(
             "api:accounts:CoachSalaryRetrieveUpdateDestroy",
-            kwargs={"pk": obj.coach.id},
+            kwargs={"pk": obj.id},
             request=request,
         )
 

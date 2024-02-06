@@ -2,6 +2,7 @@ from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIV
 from rest_framework.permissions import IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend
 from accounts.serializers.admin import AdminSerializer
+from accounts.permissions.isAccountOwner import IsAccountOwner
 from accounts.permissions.isAdmin import IsAdmin
 from accounts.filters.admin import AdminFilter
 from accounts.models.user import User, Contact
@@ -39,7 +40,7 @@ class AdminRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
         if self.request.method == "GET":
             self.permission_classes = [IsAuthenticated]
         elif self.request.method == "PUT":
-            self.permission_classes = [IsAuthenticated & IsAdmin]
+            self.permission_classes = [IsAuthenticated & IsAccountOwner]
         elif self.request.method == "DELETE":
-            self.permission_classes = [IsAuthenticated & IsAdmin]
+            self.permission_classes = [IsAuthenticated & IsAccountOwner]
         return super().get_permissions()
