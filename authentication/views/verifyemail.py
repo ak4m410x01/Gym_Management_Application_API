@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework import status
 from accounts.models.user import User
+from authentication.utils.token import JWTToken
 
 
 class VerifyEmail(GenericAPIView):
@@ -20,14 +21,8 @@ class VerifyEmail(GenericAPIView):
             return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            payload = jwt.decode(
-                jwt=token,
-                key=config("JWT_SECRET_KEY"),
-                algorithms=["HS256"],
-            )
-
+            payload = JWTToken.get_payload(token)
             username = payload.get("username")
-
             user = User.objects.filter(username=username).first()
 
             if not user:

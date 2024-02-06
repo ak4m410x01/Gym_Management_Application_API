@@ -13,23 +13,23 @@ class ContactUsListCreate(ListCreateAPIView):
     filter_backends = (DjangoFilterBackend,)
     filterset_class = ContactUsFilter
 
-    # def get_permissions(self):
-    #     if self.request.method == "GET":
-    #         self.permission_classes = [IsAuthenticated & IsAdmin]
-    #     elif self.request.method == "POST":
-    #         self.permission_classes = [IsAuthenticated & IsAdmin]
-    #     return super().get_permissions()
+    def get_permissions(self):
+        if self.request.method == "GET":
+            self.permission_classes = [IsAuthenticated & IsAdmin]
+        elif self.request.method == "POST":
+            self.permission_classes = [IsAuthenticated & IsAdmin]
+        return super().get_permissions()
 
 
 class ContactUsRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
     queryset = ContactUs.objects.all()
     serializer_class = ContactUsSerializer
 
-    # def get_permissions(self):
-    #     if self.request.method == "GET":
-    #         self.permission_classes = [IsAuthenticated & IsAdmin]
-    #     elif self.request.method == "PUT":
-    #         self.permission_classes = [IsAuthenticated & IsAdmin]
-    #     elif self.request.method == "DELETE":
-    #         self.permission_classes = [IsAuthenticated & IsAdmin]
-    #     return super().get_permissions()
+    def get_permissions(self):
+        if self.request.method == "GET":
+            self.permission_classes = [IsAuthenticated & IsAdmin]
+        elif self.request.method == "PUT":
+            self.permission_classes = [IsAuthenticated & IsAdmin]
+        elif self.request.method == "DELETE":
+            self.permission_classes = [IsAuthenticated & IsAdmin]
+        return super().get_permissions()

@@ -47,7 +47,6 @@ class BaseAdminSerializer(serializers.ModelSerializer):
         ordering = (id,)
         fields = [
             "url",
-            "id",
             "username",
             "email",
             "password",

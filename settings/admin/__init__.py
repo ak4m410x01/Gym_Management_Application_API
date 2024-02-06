@@ -1,3 +1,2 @@
-from django.test import TestCase
-
-# Create your tests here.
+from settings.admin.aboutUs import AboutUs
+from settings.admin.contactUs import ContactUs

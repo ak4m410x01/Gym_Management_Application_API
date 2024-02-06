@@ -6,13 +6,12 @@ from accounts.models.user import User
 class UserFilter(django_filters.FilterSet):
     role = django_filters.CharFilter(method="filter_by_role")
     username = django_filters.CharFilter(lookup_expr="icontains")
-    email = django_filters.CharFilter(lookup_expr="icontains")
     first_name = django_filters.CharFilter(lookup_expr="icontains")
     last_name = django_filters.CharFilter(lookup_expr="icontains")
 
     class Meta:
         model = User
-        fields = ["role", "username", "email", "first_name", "last_name"]
+        fields = ["role", "username", "first_name", "last_name"]
 
     def filter_by_role(self, queryset, name, value):
         if value == "admin":

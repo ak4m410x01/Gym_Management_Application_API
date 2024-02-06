@@ -1,5 +1,4 @@
 from django.urls import path
-
 from accounts.views.member import MemberListCreate, MemberRetrieveUpdateDestroy
 
 urlpatterns = [

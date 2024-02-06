@@ -4,41 +4,17 @@ from accounts.models.user import User
 
 
 class UserSerializer(serializers.ModelSerializer):
-    # Contacts
-    phone = serializers.CharField(source="contact.phone")
-    whatsapp = serializers.CharField(source="contact.whatsapp")
-    telegram = serializers.CharField(source="contact.telegram")
-    facebook = serializers.CharField(source="contact.facebook")
-    instagram = serializers.CharField(source="contact.instagram")
-    twitter = serializers.CharField(source="contact.twitter")
-
     url = serializers.SerializerMethodField(read_only=True)
-    user_id = serializers.SerializerMethodField(read_only=True)
     role = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = User
         fields = [
             "url",
-            "user_id",
             "role",
             "username",
-            "email",
-            "password",
             "first_name",
             "last_name",
-            "gender",
-            "date_of_birth",
-            "city",
-            "address",
-            "phone",
-            "whatsapp",
-            "telegram",
-            "facebook",
-            "instagram",
-            "twitter",
-            "last_login",
-            "date_joined",
         ]
 
     def get_role(self, obj):

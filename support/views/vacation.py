@@ -1,16 +1,12 @@
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.permissions import IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend
-
 from support.serializers.vacation import VacationSerializer
 from support.filters.vacation import VacationFilter
 from support.models.vacation import Vacation
-
 from accounts.permissions.isAdmin import IsAdmin
 from accounts.permissions.isCoach import IsCoach
-
-from jwt import decode
-from decouple import config
+from authentication.utils.token import JWTToken
 
 
 class VacationListCreate(ListCreateAPIView):
@@ -25,7 +21,7 @@ class VacationListCreate(ListCreateAPIView):
             return qs.none()
 
         token = self.request.auth.token.decode()
-        payload = decode(token, key=config("JWT_SECRET_KEY"), algorithms=["HS256"])
+        payload = JWTToken.get_payload(token)
 
         if payload.get("user_role") == "admin":
             return qs

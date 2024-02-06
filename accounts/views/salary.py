@@ -9,6 +9,7 @@ from accounts.models.salary import CoachSalary
 class CoachSalaryListCreate(ListCreateAPIView):
     queryset = CoachSalary.objects.all()
     serializer_class = CoachSalarySerializer
+    lookup_field = "coach_id"
 
     def get_permissions(self):
         if self.request.method == "GET":
@@ -21,6 +22,7 @@ class CoachSalaryListCreate(ListCreateAPIView):
 class CoachSalaryRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
     queryset = CoachSalary.objects.all()
     serializer_class = CoachSalarySerializer
+    lookup_field = "coach_id"
 
     def get_permissions(self):
         if self.request.method == "GET":

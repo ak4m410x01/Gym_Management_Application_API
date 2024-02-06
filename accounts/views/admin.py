@@ -25,7 +25,6 @@ class AdminListCreate(ListCreateAPIView):
 class AdminRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
     queryset = Admin.objects.all()
     serializer_class = AdminSerializer
-    permission_classes = (IsAdmin,)
 
     def perform_destroy(self, instance):
         user = User.objects.get(id=instance.user.id)

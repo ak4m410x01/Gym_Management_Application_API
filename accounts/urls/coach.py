@@ -1,5 +1,4 @@
 from django.urls import path
-
 from accounts.views.coach import CoachListCreate, CoachRetrieveUpdateDestroy
 from accounts.views.salary import (
     CoachSalaryListCreate,
@@ -14,9 +13,13 @@ urlpatterns = [
         name="CoachRetrieveUpdateDestroy",
     ),
     # Salary
-    path("salaries/", CoachSalaryListCreate.as_view(), name="CoachSalaryListCreate"),
     path(
-        "salaries/<int:pk>/",
+        "<int:coach_id>/salaries/",
+        CoachSalaryListCreate.as_view(),
+        name="CoachSalaryListCreate",
+    ),
+    path(
+        "<int:coach_id>/salaries/<int:salary_id>/",
         CoachSalaryRetrieveUpdateDestroy.as_view(),
         name="CoachSalaryRetrieveUpdateDestroy",
     ),
