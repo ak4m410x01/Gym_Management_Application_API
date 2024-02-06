@@ -27,7 +27,7 @@ class AboutUsRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
 
     def get_permissions(self):
         if self.request.method == "GET":
-            self.permission_classes = [IsAuthenticated & IsAdmin]
+            self.permission_classes = [IsAuthenticated]
         elif self.request.method == "PUT":
             self.permission_classes = [IsAuthenticated & IsAdmin]
         elif self.request.method == "DELETE":
