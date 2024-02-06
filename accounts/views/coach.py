@@ -4,7 +4,6 @@ from django_filters.rest_framework import DjangoFilterBackend
 from accounts.serializers.coach import CoachSerializer
 from accounts.permissions.isAccountOwner import IsAccountOwner
 from accounts.permissions.isAdmin import IsAdmin
-from accounts.permissions.noOne import NoOne
 from accounts.filters.coach import CoachFilter
 from accounts.models.user import User, Contact
 from accounts.models.coach import Coach
