@@ -1,8 +1,10 @@
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.permissions import IsAuthenticated
+from django_filters.rest_framework import DjangoFilterBackend
 from accounts.serializers.salary import CoachSalarySerializer
 from accounts.permissions.isAdmin import IsAdmin
 from accounts.permissions.isCoach import IsCoach
+from accounts.filters.salary import SalaryFilter
 from accounts.models.salary import CoachSalary
 from authentication.utils.token import JWTToken
 
@@ -10,6 +12,8 @@ from authentication.utils.token import JWTToken
 class CoachSalaryListCreate(ListCreateAPIView):
     queryset = CoachSalary.objects.all()
     serializer_class = CoachSalarySerializer
+    filter_backends = (DjangoFilterBackend,)
+    filterset_class = SalaryFilter
 
     def get_queryset(self):
         qs = super().get_queryset()
