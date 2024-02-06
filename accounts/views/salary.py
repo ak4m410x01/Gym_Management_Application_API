@@ -20,7 +20,7 @@ class CoachSalaryListCreate(ListCreateAPIView):
         if payload.get("user_role") == "admin":
             return qs
         elif payload.get("username") == self.request.user.username:
-            return qs.filter(coach__user__username=self.request.user.username)
+            return qs.filter(coach=payload.get("user_id"))
         return qs.none()
 
     def get_permissions(self):
