@@ -1,14 +1,15 @@
 from rest_framework import serializers
 from rest_framework.reverse import reverse
-from accounts.models.coach import Coach
 from accounts.models.salary import CoachSalary
+from accounts.models.coach import Coach
+from accounts.models.user import User
 
 
 class CoachSalarySerializer(serializers.ModelSerializer):
     url = serializers.SerializerMethodField(read_only=True)
 
     coach_url = serializers.SerializerMethodField(read_only=True)
-    coach_username = serializers.CharField(source="coach.user.username", read_only=True)
+    coach_username = serializers.CharField(source="coach.user.username")
 
     class Meta:
         model = CoachSalary
@@ -27,20 +28,17 @@ class CoachSalarySerializer(serializers.ModelSerializer):
         request = self.context.get("request")
         if request and request.method == "PUT":
             self.fields["salary"].required = False
+            self.fields["coach_username"].read_only = True
 
-    def validate_salary(self, value):
-        request = self.context.get("request")
-        if request and request.method == "PUT":
-            return value
+    def validate_coach_username(self, value):
+        qs = User.objects.filter(username__iexact=value)
+        if not qs.exists():
+            raise serializers.ValidationError("coach account does not exists")
 
-        coach_id = self.context["view"].kwargs["coach_id"]
-        qs = CoachSalary.objects.filter(coach=coach_id)
+        qs = CoachSalary.objects.filter(coach__user__username__iexact=value)
         if qs.exists():
             raise serializers.ValidationError("coach already have salary.")
 
-        qs = Coach.objects.filter(id=coach_id)
-        if not qs.exists():
-            raise serializers.ValidationError("coach account does not exists")
         return value
 
     def get_url(self, obj):
@@ -50,7 +48,7 @@ class CoachSalarySerializer(serializers.ModelSerializer):
 
         return reverse(
             "api:accounts:CoachSalaryRetrieveUpdateDestroy",
-            kwargs={"coach_id": obj.coach.id, "salary_id": obj.id},
+            kwargs={"pk": obj.coach.id},
             request=request,
         )
 
@@ -66,8 +64,8 @@ class CoachSalarySerializer(serializers.ModelSerializer):
         )
 
     def create(self, validated_data):
-        coach_id = self.context["view"].kwargs["coach_id"]
-        coach = Coach.objects.filter(id=coach_id).first()
-
-        salary_id = validated_data["salary"]
-        return CoachSalary.objects.create(coach=coach, salary=salary_id)
+        coach = validated_data.pop("coach", {})
+        coach = Coach.objects.filter(
+            user__username__iexact=coach["user"]["username"]
+        ).first()
+        return CoachSalary.objects.create(coach=coach, **validated_data)
