@@ -57,9 +57,10 @@ PROJECT_APPS = [
     "api.apps.ApiConfig",
     "accounts.apps.AccountsConfig",
     "authentication.apps.AuthenticationConfig",
+    "plans.apps.PlansConfig",
     "support.apps.SupportConfig",
-    "settings.apps.SettingsConfig",
     "jobs.apps.JobsConfig",
+    "settings.apps.SettingsConfig",
 ]
 
 # Combine all apps
