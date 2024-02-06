@@ -1,0 +1,45 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres:16
+    container_name: postgres_db
+    hostname: postgres_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      server_side:
+    environment:
+      - POSTGRES_DB=${POSTGRES_USER}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+  api:
+    build:
+      context: .
+      dockerfile: api.Dockerfile
+    container_name: api
+    hostname: api
+    ports:
+      - "80:80"
+    networks:
+      server_side:
+      client_side:
+    depends_on:
+      - db
+    restart: always
+    command:
+      [
+        "bash",
+        "-c",
+        "python manage.py migrate && python manage.py runserver 0.0.0.0:80",
+      ]
+
+volumes:
+  db_data:
+
+networks:
+  client_side:
+  server_side:
+    external: false
