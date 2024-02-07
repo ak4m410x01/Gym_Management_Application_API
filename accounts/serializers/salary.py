@@ -23,12 +23,13 @@ class CoachSalarySerializer(serializers.ModelSerializer):
             "salary": {"required": True},
         }
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def get_fields(self):
+        fields = super().get_fields()
         request = self.context.get("request")
         if request and request.method == "PUT":
-            self.fields["salary"].required = False
-            self.fields["coach_username"].read_only = True
+            fields["salary"].required = False
+            fields["coach_username"].read_only = True
+        return fields
 
     def validate_coach_username(self, value):
         qs = User.objects.filter(username__iexact=value)

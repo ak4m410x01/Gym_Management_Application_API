@@ -148,12 +148,12 @@ class BaseCoachSerializer(serializers.ModelSerializer):
 
 
 class CoachSerializer(BaseCoachSerializer):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def get_fields(self):
+        fields = super().get_fields()
         request = self.context.get("request")
         if request and request.method == "PUT":
+            fields["email"].read_only = True
             NOT_REQUIRED_FILEDS = (
-                "email",
                 "username",
                 "password",
                 "first_name",
@@ -162,7 +162,8 @@ class CoachSerializer(BaseCoachSerializer):
                 "date_of_birth",
             )
             for field_name in NOT_REQUIRED_FILEDS:
-                self.fields[field_name].required = False
+                fields[field_name].required = False
+        return fields
 
     def create(self, validated_data):
         user_data = validated_data.pop("user", {})
