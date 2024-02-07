@@ -4,8 +4,8 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework import status
-from accounts.models.user import User
 from authentication.utils.token import JWTToken
+from accounts.models.user import User
 
 
 class VerifyEmail(GenericAPIView):
@@ -13,11 +13,12 @@ class VerifyEmail(GenericAPIView):
 
     def get(self, request, *args, **kwargs):
         token = request.GET.get("token")
-        response = {}
 
         if not token:
-            response["token"] = "Token is missing."
-            return Response(response, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"token": "Token is missing."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
         try:
             payload = JWTToken.get_payload(token)
@@ -25,32 +26,43 @@ class VerifyEmail(GenericAPIView):
             user = User.objects.filter(username=username).first()
 
             if not user:
-                response["error"] = "User does not exist."
-                return Response(response, status=status.HTTP_404_NOT_FOUND)
+                return Response(
+                    {"user": "User does not exist."},
+                    status=status.HTTP_404_NOT_FOUND,
+                )
 
             if user.is_verified:
-                response["email"] = "Email already verified."
-                return Response(response, status=status.HTTP_200_OK)
+                return Response(
+                    {"email": "Email already verified."},
+                    status=status.HTTP_200_OK,
+                )
 
             user.is_verified = True
             user.save()
             signin_url = (
                 f"{reverse('api:authentication:ObtainPairTokenView',request=request)}"
             )
-            print(signin_url)
-            response["email"] = "Verification is successful."
-            response["signin"] = f"Signin now {signin_url}"
 
-            return Response(response, status=status.HTTP_200_OK)
+            return Response(
+                {
+                    "email": "Verification is successful.",
+                    "signin": f"Signin now {signin_url}",
+                },
+                status=status.HTTP_200_OK,
+            )
 
         except jwt.ExpiredSignatureError:
-            response["error"] = "Expired Token."
-            return Response(response, status=status.HTTP_401_UNAUTHORIZED)
+            return Response(
+                {"token": "Expired Token."}, status=status.HTTP_401_UNAUTHORIZED
+            )
 
         except jwt.InvalidTokenError:
-            response["error"] = "Invalid Token."
-            return Response(response, status=status.HTTP_401_UNAUTHORIZED)
+            return Response(
+                {"token": "Invalid Token."}, status=status.HTTP_401_UNAUTHORIZED
+            )
 
         except Exception as e:
-            response["error"] = f"An error occurred: {str(e)}"
-            return Response(response, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response(
+                {"error": f"An error occurred: {str(e)}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )

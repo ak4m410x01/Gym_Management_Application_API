@@ -4,12 +4,12 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
-from authentication.serializers.obtainPairToken import ObtainPairTokenSerializer
-from accounts.models.user import User
-from accounts.models.admin import Admin
-from accounts.models.coach import Coach
-from accounts.models.member import Member
 from accounts.models.visitor import Visitor
+from accounts.models.member import Member
+from accounts.models.coach import Coach
+from accounts.models.admin import Admin
+from accounts.models.user import User
+from authentication.serializers.obtainPairToken import ObtainPairTokenSerializer
 
 
 class ObtainPairTokenView(APIView):
@@ -84,5 +84,8 @@ class ObtainPairTokenView(APIView):
             )
 
         return Response(
-            {"detail": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED
+            {
+                "detail": "Invalid credentials",
+            },
+            status=status.HTTP_401_UNAUTHORIZED,
         )
