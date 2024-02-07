@@ -25,11 +25,12 @@ class JobSerializer(serializers.ModelSerializer):
             "created_at": {"read_only": True},
         }
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def get_fields(self):
+        fields = super().get_fields()
         request = self.context.get("request")
         if request and request.method == "PUT":
-            self.fields["title"].required = False
+            fields["title"].required = False
+        return fields
 
     def validate_job_type(self, value):
         if value not in ("fulltime", "parttime"):

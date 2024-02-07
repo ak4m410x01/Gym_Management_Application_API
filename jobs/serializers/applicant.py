@@ -36,11 +36,12 @@ class ApplicantSerializer(serializers.ModelSerializer):
             "applied_at": {"read_only": True},
         }
 
-        def __init__(self, *args, **kwargs):
-            super().__init__(*args, **kwargs)
-            request = self.context.get("request")
-            if request and request.method == "PUT":
-                self.fields["job_id"].required = False
+    def get_fields(self):
+        fields = super().get_fields()
+        request = self.context.get("request")
+        if request and request.method == "PUT":
+            fields["job_id"].read_only = True
+        return fields
 
     def validate_status(self, value):
         if value not in ("refused", "accepted"):
