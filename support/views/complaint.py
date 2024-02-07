@@ -27,7 +27,7 @@ class ComplaintListCreate(ListCreateAPIView):
 
         if payload.get("user_role") == "admin":
             return qs
-        return qs.filter(member__user__username=payload.get("username"))
+        return qs.filter(member=payload.get("user_id"))
 
     def get_permissions(self):
         if self.request.method == "GET":
