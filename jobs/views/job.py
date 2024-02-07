@@ -1,13 +1,17 @@
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.permissions import IsAuthenticated
+from django_filters.rest_framework import DjangoFilterBackend
 from accounts.permissions.isAdmin import IsAdmin
 from jobs.serializers.job import JobSerializer
+from jobs.filters.job import JobFilter
 from jobs.models.job import Job
 
 
 class JobListCreate(ListCreateAPIView):
     queryset = Job.objects.all()
     serializer_class = JobSerializer
+    filter_backends = (DjangoFilterBackend,)
+    filterset_class = JobFilter
 
     def get_permissions(self):
         if self.request.method == "GET":

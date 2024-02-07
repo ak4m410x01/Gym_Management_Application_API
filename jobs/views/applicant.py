@@ -1,7 +1,9 @@
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.permissions import IsAuthenticated
+from django_filters.rest_framework import DjangoFilterBackend
 from jobs.permissions.isApplicantOwner import IsApplicantOwner
 from jobs.serializers.applicant import ApplicantSerializer
+from jobs.filters.applicant import ApplicantFilter
 from jobs.models.applicant import Applicant
 from accounts.permissions.isAdmin import IsAdmin
 from authentication.utils.token import JWTToken
@@ -10,6 +12,8 @@ from authentication.utils.token import JWTToken
 class ApplicantListCreate(ListCreateAPIView):
     queryset = Applicant.objects.all()
     serializer_class = ApplicantSerializer
+    filter_backends = (DjangoFilterBackend,)
+    filterset_class = ApplicantFilter
 
     def get_queryset(self):
         token = self.request.auth.token.decode()
