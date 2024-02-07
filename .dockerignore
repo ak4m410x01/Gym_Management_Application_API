@@ -1,5 +1,11 @@
+.idea
+.venv
 .git
 .gitignore
+assets
+database
+LICENSE
 README.md
 api.Dockerfile
 docker-compose.yml
+.dockerignore
