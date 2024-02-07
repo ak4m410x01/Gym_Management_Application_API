@@ -1,6 +1,6 @@
 # Django
 # ------
-Django==5.0.1
+Django==5.0.2
 django-filter==23.5
 django-cors-headers==4.3.1
 
