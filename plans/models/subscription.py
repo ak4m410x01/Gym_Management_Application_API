@@ -1,21 +1,21 @@
 from django.db import models
+from django.utils import timezone
 from accounts.models.coach import Coach
 from accounts.models.member import Member
 from plans.models.plan import Plan
 
 
 class Subscription(models.Model):
-    title = models.CharField(max_length=100)
     subscribed_at = models.DateTimeField(auto_now_add=True)
-    is_finished = models.BooleanField(default=False)
-    price = models.IntegerField(default=0)
 
+    plan = models.ForeignKey(Plan, models.CASCADE)
     coach = models.ForeignKey(Coach, models.CASCADE)
     member = models.ForeignKey(Member, models.CASCADE)
-    plan = models.ForeignKey(Plan, models.CASCADE)
 
-    class Meta:
-        unique_together = ("coach", "member", "plan")
+    @property
+    def is_finished(self) -> bool:
+        end_date = self.subscribed_at + timezone.timedelta(days=self.plan.max_days)
+        return end_date.date() <= timezone.now().date()
 
     def __str__(self) -> str:
-        return f"{self.title}"
+        return f"{self.member.user.username}"
