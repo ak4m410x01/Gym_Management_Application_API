@@ -1,4 +1,4 @@
-# TODO API
+# GYM Management Application API
 
 ## Details
 
