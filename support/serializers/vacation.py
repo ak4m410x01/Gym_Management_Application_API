@@ -35,13 +35,14 @@ class VacationSerializer(serializers.ModelSerializer):
             "status": {"read_only": True},
         }
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def get_fields(self):
+        fields = super().get_fields()
         request = self.context.get("request")
         if request and request.method == "PUT":
-            self.fields["status"].read_only = False
+            fields["status"].read_only = False
             for field_name in ("title", "start_at", "end_at"):
-                self.fields[field_name].required = False
+                fields[field_name].required = False
+        return fields
 
     def validate_status(self, value):
         if value not in ("refused", "accepted"):

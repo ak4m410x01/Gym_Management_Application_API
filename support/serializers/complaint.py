@@ -35,12 +35,13 @@ class ComplaintSerializer(serializers.ModelSerializer):
             "status": {"read_only": True},
         }
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def get_fields(self):
+        fields = super().get_fields()
         request = self.context.get("request")
         if request and request.method == "PUT":
             for field_name in ("title", "about"):
-                self.fields[field_name].required = False
+                fields[field_name].required = False
+        return fields
 
     def validate_send_to(self, value):
         if value not in ["admin", "coach"]:
