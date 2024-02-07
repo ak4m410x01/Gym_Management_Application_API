@@ -72,6 +72,13 @@ these variables are for the lab environment only... don't use these in xxx produ
 
 ---
 
+## 🛠 Documentation and Endpoints
+
+**1. [Postman](https://documenter.getpostman.com/view/27192844/2s9Yyy9eLr)**
+**2. [Apidog](https://apidog.com/apidoc/shared-24d58e46-fc7f-4dcd-8ea0-2658c437d480)**
+
+---
+
 ## PIP Packages
 
     +-------------------------------+---------+---------------------------+
