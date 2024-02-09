@@ -46,26 +46,28 @@ The Gym API Application project aims to streamline gym management and user inter
 
 8. Don't forget .env file with variables
 
-| Variable            | Value                                                                 |
-| ------------------- | --------------------------------------------------------------------- |
-| SECRET_KEY          | 'django-insecure-%2dmqnqj9v2e&8yk\*t=#b+2-=i!45+153*@-g0*=&%1od16z^m' |
-| DEBUG               | False                                                                 |
-| ALLOWED_HOSTS       | 172.0.0.1,\*                                                          |
-| DATABASE_ENGINE     | django.db.backends.postgresql                                         |
-| DATABASE_HOST       | db                                                                    |
-| DATABASE_PORT       | 5432                                                                  |
-| DATABASE_NAME       | gym                                                                   |
-| DATABASE_USER       | gym                                                                   |
-| DATABASE_PASSWORD   | gym                                                                   |
-| EMAIL_BACKEND       | django.core.mail.backends.smtp.EmailBackend                           |
-| EMAIL_HOST          | smtp.gmail.com                                                        |
-| EMAIL_PORT          | 587                                                                   |
-| EMAIL_HOST_USER     | youremail@gmail.com                                                   |
-| EMAIL_HOST_PASSWORD | yourapppassword                                                       |
-| JWT_SECRET_KEY      | ak4m410x01                                                            |
-| POSTGRES_DB         | gym                                                                   |
-| POSTGRES_USER       | gym                                                                   |
-| POSTGRES_PASSWORD   | gym                                                                   |
+| Variable              | Value                                                                 |
+| --------------------- | --------------------------------------------------------------------- |
+| SECRET_KEY            | 'django-insecure-%2dmqnqj9v2e&8yk\*t=#b+2-=i!45+153*@-g0*=&%1od16z^m' |
+| DEBUG                 | False                                                                 |
+| ALLOWED_HOSTS         | 172.0.0.1,\*                                                          |
+| DATABASE_ENGINE       | django.db.backends.postgresql                                         |
+| DATABASE_HOST         | db                                                                    |
+| DATABASE_PORT         | 5432                                                                  |
+| DATABASE_NAME         | gym                                                                   |
+| DATABASE_USER         | gym                                                                   |
+| DATABASE_PASSWORD     | gym                                                                   |
+| EMAIL_BACKEND         | django.core.mail.backends.smtp.EmailBackend                           |
+| EMAIL_HOST            | smtp.gmail.com                                                        |
+| EMAIL_PORT            | 587                                                                   |
+| EMAIL_HOST_USER       | youremail@gmail.com                                                   |
+| EMAIL_HOST_PASSWORD   | yourapppassword                                                       |
+| JWT_SECRET_KEY        | ak4m410x01                                                            |
+| POSTGRES_DB           | gym                                                                   |
+| POSTGRES_USER         | gym                                                                   |
+| POSTGRES_PASSWORD     | gym                                                                   |
+| CELERY_BROKER_URL     | redis://redis:6379                                                    |
+| CELERY_RESULT_BACKEND | redis://redis:6379                                                    |
 
 note:
 these variables are for the lab environment only... don't use these in xxx production environments xxx
