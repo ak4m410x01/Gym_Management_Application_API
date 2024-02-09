@@ -1,45 +1,69 @@
 version: "3.8"
 
 services:
-  db:
+  postgres:
+    container_name: postgres
+    hostname: postgres
     image: postgres:16
-    container_name: postgres_db
-    hostname: postgres_db
-    ports:
-      - "5432:5432"
+    restart: unless-stopped
+    expose:
+      - 5432
     volumes:
-      - db_data:/var/lib/postgresql/data
-    networks:
-      server_side:
+      - postgres_data:/var/lib/postgresql/data/
     environment:
       - POSTGRES_DB=${POSTGRES_USER}
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+
+  redis:
+    container_name: redis
+    hostname: redis
+    image: redis:7.0
+    restart: unless-stopped
+    expose:
+      - 6379
+
   api:
+    container_name: api
+    hostname: api
+    restart: unless-stopped
     build:
       context: .
       dockerfile: api.Dockerfile
-    container_name: api
-    hostname: api
-    ports:
-      - "80:80"
-    networks:
-      server_side:
-      client_side:
+    entrypoint: /app/server_entrypoint.sh
+    volumes:
+      - static_volume:/app/static
+    expose:
+      - 8000
     depends_on:
-      - db
+      - postgres
+      - redis
+
+  worker:
+    container_name: worker
+    hostname: worker
+    build:
+      context: .
+      dockerfile: api.Dockerfile
+    entrypoint: /app/worker_entrypoint.sh
+    volumes:
+      - static_volume:/app/static
+    depends_on:
+      - postgres
+      - redis
+      - api
+
+  nginx:
+    container_name: nginx
+    hostname: nginx
     restart: always
-    command:
-      [
-        "bash",
-        "-c",
-        "python manage.py migrate && python manage.py runserver 0.0.0.0:80",
-      ]
+    image: nginx:latest
+    ports:
+      - 80:80
+    volumes:
+      - ./default.conf:/etc/nginx/conf.d/default.conf
+      - static_volume:/app/static
 
 volumes:
-  db_data:
-
-networks:
-  client_side:
-  server_side:
-    external: false
+  static_volume: {}
+  postgres_data: {}

@@ -4,26 +4,26 @@ FROM python:3.11
 # author name
 LABEL author="ak4m410x01"
 
-# set work directory
-WORKDIR /app
+# set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
 
 # set default shell
 SHELL [ "/bin/bash", "-c" ]
 
+# set work directory
+WORKDIR /app
+
 # update/upgrade container & install git
-RUN apt update -qqq && \
-    apt upgrade -y -qqq
+RUN apt update && apt upgrade -y
 
 # copy code files into container
 COPY . .
-
-# set environment variables
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
 
 # install required packages
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
-# expose port
-EXPOSE 80
+# Run server and Worker
+RUN chmod +x /app/server_entrypoint.sh
+RUN chmod +x /app/worker_entrypoint.sh
