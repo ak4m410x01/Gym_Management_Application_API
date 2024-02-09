@@ -1,5 +1,3 @@
-from django.conf.global_settings import EMAIL_HOST_USER
-from django.core.mail import send_mail
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -7,6 +5,7 @@ from rest_framework.reverse import reverse
 from rest_framework.views import APIView
 from rest_framework import status
 from authentication.serializers.signup import SignUpSerializer
+from authentication.tasks.sendMail import send_mail
 
 
 class SignUp(APIView):
@@ -23,18 +22,13 @@ class SignUp(APIView):
 
             verify_url = f"{reverse('api:authentication:VerifyEmail',request=request)}?token={token}"
             email = {
-                "to": visitor.user.email,
+                "send_to": visitor.user.email,
                 "subject": "GYM Sign Up Verification",
                 "body": f"Dear, {visitor.user.username}... !!\n\n\nUse the link below to verify your email: \n\n{verify_url}",
             }
 
             # Send Email
-            send_mail(
-                from_email=EMAIL_HOST_USER,
-                recipient_list=[email.get("to")],
-                subject=email.get("subject"),
-                message=email.get("body"),
-            )
+            send_mail.delay(email.get("subject"), email.get("body"), [email.get("to")])
 
             return Response(
                 {

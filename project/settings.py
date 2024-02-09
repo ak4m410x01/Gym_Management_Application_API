@@ -182,8 +182,21 @@ EMAIL_USE_TLS = True
 EMAIL_BACKEND = config("EMAIL_BACKEND")
 EMAIL_HOST = config("EMAIL_HOST")
 EMAIL_PORT = config("EMAIL_PORT", cast=int)
-EMAIL_HOST_USER = config("EMAIL_HOST_USER")
-EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
+# EMAIL_HOST_USER = config("EMAIL_HOST_USER")
+# EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
+
+EMAIL_HOST_USER = "ak4m410x01@gmail.com"
+EMAIL_HOST_PASSWORD = "opgz pmpw evya ndbq"
+
+# Celery configuration
+# -----------------------------------
+CELERY_BROKER_URL = config("CELERY_BROKER_URL", "")
+CELERY_RESULT_BACKEND = config("CELERY_RESULT_BACKEND", "")
+CELERY_ACCEPT_CONTENT = ["application/json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
+CELERY_TIMEZONE = "Africa/Cairo"
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators

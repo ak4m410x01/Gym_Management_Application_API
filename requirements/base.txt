@@ -16,6 +16,7 @@ djangorestframework-simplejwt==5.3.1
 python-decouple==3.8
 
 # ===============================================================================
-# API Documentation
+# Task Scheduler
 # --------------------
-# drf-yasg==1.21.7
+celery==5.3.6
+redis==5.0.1
