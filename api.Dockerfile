@@ -25,5 +25,5 @@ RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
 # Run server and Worker
-RUN chmod +x /app/server_entrypoint.sh
-RUN chmod +x /app/worker_entrypoint.sh
+RUN chmod +x /app/entrypoints/server_entrypoint.sh
+RUN chmod +x /app/entrypoints/worker_entrypoint.sh
