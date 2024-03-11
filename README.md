@@ -31,7 +31,7 @@ The Gym API Application project aims to streamline gym management and user inter
 4. Clone the repository
 
    ```bash
-   git clone https://github.com/ak4m410x01/TODO_API/ .
+   git clone https://github.com/ak4m410x01/Gym_Management_Application_API.git .
    ```
 
 5. Start the application
